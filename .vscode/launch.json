@@ -1,0 +1,14 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Spring Boot-MiniApplication<sinatra-mini>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "pro.sinatra.mini.MiniApplication",
+            "projectName": "sinatra-mini",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        }
+    ]
+}

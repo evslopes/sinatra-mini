@@ -1,3 +1,4 @@
+-- Active: 1766171539795@@127.0.0.1@5432
 -- Populate Loja table
 INSERT INTO loja (id, nome, data_criacao) VALUES
 (1, 'Loja A', '2023-01-01'),
