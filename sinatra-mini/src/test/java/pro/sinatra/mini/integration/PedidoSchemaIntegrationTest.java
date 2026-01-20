@@ -25,17 +25,17 @@ public class PedidoSchemaIntegrationTest {
             DatabaseMetaData meta = conn.getMetaData();
             String tableName = "PEDIDO"; // H2 stores uppercase by default
 
-            ResultSet rs = meta.getIndexInfo(null, null, tableName, false, false);
-
             // Map index name -> ordered list of columns
             Map<String, SortedMap<Integer, String>> indexes = new HashMap<>();
 
-            while (rs.next()) {
-                String idxName = rs.getString("INDEX_NAME");
-                String colName = rs.getString("COLUMN_NAME");
-                int ordinal = rs.getInt("ORDINAL_POSITION");
-                if (idxName == null || colName == null) continue;
-                indexes.computeIfAbsent(idxName, k -> new TreeMap<>()).put(ordinal, colName.toLowerCase());
+            try (ResultSet rs = meta.getIndexInfo(null, null, tableName, false, false)) {
+                while (rs.next()) {
+                    String idxName = rs.getString("INDEX_NAME");
+                    String colName = rs.getString("COLUMN_NAME");
+                    int ordinal = rs.getInt("ORDINAL_POSITION");
+                    if (idxName == null || colName == null) continue;
+                    indexes.computeIfAbsent(idxName, k -> new TreeMap<>()).put(ordinal, colName.toLowerCase());
+                }
             }
 
             // Find index that matches loja_id, data_pedido in that order
@@ -45,8 +45,7 @@ public class PedidoSchemaIntegrationTest {
                 if (cols.size() >= 2) {
                     String first = cols.get(0).toLowerCase();
                     String second = cols.get(1).toLowerCase();
-                    if ((first.equals("loja_id") && second.equals("data_pedido")) ||
-                        (first.equals("loja_id") && second.equals("data_pedido"))) {
+                    if (first.equals("loja_id") && second.equals("data_pedido")) {
                         found = true;
                         break;
                     }
