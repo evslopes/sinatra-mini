@@ -3,12 +3,10 @@ package pro.sinatra.mini.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.format.annotation.DateTimeFormat;
-import pro.sinatra.mini.service.DiaMenorVendaService;
-import pro.sinatra.mini.reports.MenorVendaDiaDTO;
-import java.time.ZoneId;
-import java.time.LocalDate;
 import pro.sinatra.mini.entity.Pedido;
 import pro.sinatra.mini.service.PedidoService;
+import pro.sinatra.mini.service.MaiorIntervaloSemVendasService;
+import pro.sinatra.mini.reports.PeriodoDTO;
 
 import java.util.List;
 
@@ -30,7 +28,7 @@ public class PedidoController {
     private PedidoService pedidoService;
 
     @Autowired
-    private DiaMenorVendaService diaMenorVendaService;
+    private MaiorIntervaloSemVendasService maiorIntervaloService;
 
     @GetMapping
     public List<Pedido> findAll() {
@@ -78,18 +76,13 @@ public class PedidoController {
                 .body(body);
     }
 
-    @GetMapping("/{lojaId}/reports/min-day-sales")
-    public ResponseEntity<MenorVendaDiaDTO> minDaySales(
+    @GetMapping("/{lojaId}/reports/longest-no-sales")
+    public PeriodoDTO longestNoSales(
             @PathVariable Long lojaId,
             @RequestParam(name = "start", required = false)
-            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate start,
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) java.time.LocalDate start,
             @RequestParam(name = "end", required = false)
-            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate end,
-            @RequestParam(name = "zoneId", required = false) String zoneId
-    ) {
-        ZoneId zone = (zoneId == null || zoneId.isBlank()) ? ZoneId.of("UTC") : ZoneId.of(zoneId);
-        return diaMenorVendaService.calcularDiaMenorVenda(lojaId, start, end, zone)
-                .map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.noContent().build());
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) java.time.LocalDate end) {
+        return maiorIntervaloService.calcularMaiorIntervalo(lojaId, start, end);
     }
 }

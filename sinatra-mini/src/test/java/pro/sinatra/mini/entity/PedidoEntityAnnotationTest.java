@@ -22,7 +22,7 @@ public class PedidoEntityAnnotationTest {
                 found = true;
                 String cols = idx.columnList();
                 assertNotNull(cols, "columnList must be defined for the index");
-                String normalized = cols.replaceAll("\s+", "").toLowerCase();
+                String normalized = cols.replaceAll("\\s+", "").toLowerCase();
                 assertEquals("loja_id,data_pedido", normalized,
                         "Index columnList should be 'loja_id, data_pedido' (physical column names)");
             }
