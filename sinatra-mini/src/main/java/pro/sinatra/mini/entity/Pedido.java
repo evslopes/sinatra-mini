@@ -7,10 +7,15 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
+import jakarta.persistence.Index;
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
+@Table(name = "pedido", indexes = {
+    @Index(name = "idx_pedido_loja_data", columnList = "loja_id, data_pedido")
+})
 public class Pedido {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
