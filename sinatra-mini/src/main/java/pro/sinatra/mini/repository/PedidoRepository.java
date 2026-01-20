@@ -16,9 +16,9 @@ public interface PedidoRepository extends JpaRepository<Pedido, Long> {
 	}
 
 	// Stream daily totals per date for a given loja (uses SQL DATE function)
-	@Query("SELECT function('DATE', p.dataPedido) as dia, SUM(p.total) as total " +
-		   "FROM Pedido p WHERE p.loja.id = :lojaId " +
-		   "GROUP BY function('DATE', p.dataPedido) " +
-		   "ORDER BY function('DATE', p.dataPedido)")
+	    @Query("SELECT cast(p.dataPedido as date) as dia, SUM(p.total) as total " +
+		    "FROM Pedido p WHERE p.loja.id = :lojaId " +
+		    "GROUP BY cast(p.dataPedido as date) " +
+		    "ORDER BY cast(p.dataPedido as date)")
 	Stream<DailySalesProjection> streamDailySalesByLoja(@Param("lojaId") Long lojaId);
 }
