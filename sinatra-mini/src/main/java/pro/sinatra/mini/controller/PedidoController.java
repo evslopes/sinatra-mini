@@ -2,8 +2,11 @@ package pro.sinatra.mini.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.format.annotation.DateTimeFormat;
 import pro.sinatra.mini.entity.Pedido;
 import pro.sinatra.mini.service.PedidoService;
+import pro.sinatra.mini.service.MaiorIntervaloSemVendasService;
+import pro.sinatra.mini.reports.PeriodoDTO;
 
 import java.util.List;
 
@@ -23,6 +26,9 @@ import pro.sinatra.mini.repository.PedidoRepository;
 public class PedidoController {
     @Autowired
     private PedidoService pedidoService;
+
+    @Autowired
+    private MaiorIntervaloSemVendasService maiorIntervaloService;
 
     @GetMapping
     public List<Pedido> findAll() {
@@ -68,5 +74,15 @@ public class PedidoController {
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=daily-sales-loja-" + lojaId + ".csv")
                 .contentType(MediaType.parseMediaType("text/csv"))
                 .body(body);
+    }
+
+    @GetMapping("/{lojaId}/reports/longest-no-sales")
+    public PeriodoDTO longestNoSales(
+            @PathVariable Long lojaId,
+            @RequestParam(name = "start", required = false)
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) java.time.LocalDate start,
+            @RequestParam(name = "end", required = false)
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) java.time.LocalDate end) {
+        return maiorIntervaloService.calcularMaiorIntervalo(lojaId, start, end);
     }
 }
