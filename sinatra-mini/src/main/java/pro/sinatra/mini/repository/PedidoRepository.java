@@ -21,4 +21,20 @@ public interface PedidoRepository extends JpaRepository<Pedido, Long> {
 		    "GROUP BY cast(p.dataPedido as date) " +
 		    "ORDER BY cast(p.dataPedido as date)")
 	Stream<DailySalesProjection> streamDailySalesByLoja(@Param("lojaId") Long lojaId);
+
+	// Projection for distinct sale days (used by Story 2.2)
+	interface DailySaleDaysProjection {
+		java.time.LocalDate getDia();
+	}
+
+	// Stream distinct days with sales for a loja within optional date bounds
+	@Query("SELECT DISTINCT cast(p.dataPedido as date) as dia " +
+			"FROM Pedido p WHERE p.loja.id = :lojaId " +
+			"AND (:start IS NULL OR cast(p.dataPedido as date) >= :start) " +
+			"AND (:end IS NULL OR cast(p.dataPedido as date) <= :end) " +
+			"ORDER BY dia")
+	Stream<DailySaleDaysProjection> streamDistinctSaleDaysByLoja(
+			@Param("lojaId") Long lojaId,
+			@Param("start") java.time.LocalDate start,
+			@Param("end") java.time.LocalDate end);
 }
