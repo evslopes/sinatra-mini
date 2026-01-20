@@ -2,6 +2,11 @@ package pro.sinatra.mini.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.format.annotation.DateTimeFormat;
+import pro.sinatra.mini.service.DiaMenorVendaService;
+import pro.sinatra.mini.reports.MenorVendaDiaDTO;
+import java.time.ZoneId;
+import java.time.LocalDate;
 import pro.sinatra.mini.entity.Pedido;
 import pro.sinatra.mini.service.PedidoService;
 
@@ -23,6 +28,9 @@ import pro.sinatra.mini.repository.PedidoRepository;
 public class PedidoController {
     @Autowired
     private PedidoService pedidoService;
+
+    @Autowired
+    private DiaMenorVendaService diaMenorVendaService;
 
     @GetMapping
     public List<Pedido> findAll() {
@@ -68,5 +76,20 @@ public class PedidoController {
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=daily-sales-loja-" + lojaId + ".csv")
                 .contentType(MediaType.parseMediaType("text/csv"))
                 .body(body);
+    }
+
+    @GetMapping("/{lojaId}/reports/min-day-sales")
+    public ResponseEntity<MenorVendaDiaDTO> minDaySales(
+            @PathVariable Long lojaId,
+            @RequestParam(name = "start", required = false)
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate start,
+            @RequestParam(name = "end", required = false)
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate end,
+            @RequestParam(name = "zoneId", required = false) String zoneId
+    ) {
+        ZoneId zone = (zoneId == null || zoneId.isBlank()) ? ZoneId.of("UTC") : ZoneId.of(zoneId);
+        return diaMenorVendaService.calcularDiaMenorVenda(lojaId, start, end, zone)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.noContent().build());
     }
 }
