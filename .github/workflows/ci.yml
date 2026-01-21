@@ -45,17 +45,17 @@ jobs:
             ${{ runner.os }}-maven-
       
       - name: Compile code
-        run: ./mvnw clean compile -B
+        run: mvn clean compile -B
       
       - name: Run unit tests
-        run: ./mvnw test -B
+        run: mvn test -B
       
       - name: Run integration tests
-        run: ./mvnw verify -B -P integration-tests
+        run: mvn verify -B -P integration-tests
         continue-on-error: false
       
       - name: Generate test coverage report
-        run: ./mvnw jacoco:report
+        run: mvn jacoco:report
       
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v3
