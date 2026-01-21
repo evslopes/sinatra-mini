@@ -45,38 +45,18 @@ jobs:
             ${{ runner.os }}-maven-
       
       - name: Compile code
-        run: ./mvnw clean compile -B
+        run: mvn clean compile -B
       
       - name: Run unit tests
-        run: ./mvnw test -B
+        run: mvn test -B
       
       - name: Run integration tests
-        run: ./mvnw verify -B -P integration-tests
+        run: mvn verify -B -P integration-tests
         continue-on-error: false
-      
-      - name: Generate test coverage report
-        run: ./mvnw jacoco:report
-      
-      - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v3
-        with:
-          files: ./target/site/jacoco/jacoco.xml
-          flags: unittests
-          name: codecov-umbrella
-          fail_ci_if_error: false
-      
-      - name: Publish test results
-        uses: EnricoMi/publish-unit-test-result-action@v2
-        if: always()
-        with:
-          files: |
-            target/surefire-reports/*.xml
-            target/failsafe-reports/*.xml
-          check_name: Test Results (Java ${{ matrix.java }})
       
       - name: Archive test reports
         if: failure()
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: test-reports
           path: |
@@ -107,7 +87,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: |
-          ./mvnw verify sonar:sonar \
+          mvn verify sonar:sonar \
             -Dsonar.projectKey=sinatra-mini \
             -Dsonar.organization=evslopes \
             -Dsonar.host.url=https://sonarcloud.io
@@ -131,12 +111,12 @@ jobs:
       
       - name: OWASP Dependency Check
         run: |
-          ./mvnw dependency-check:check -B
+          mvn dependency-check:check -B
         continue-on-error: true
       
       - name: Upload dependency check report
         if: always()
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: dependency-check-report
           path: target/dependency-check-report.html
@@ -146,7 +126,7 @@ jobs:
     name: Build Docker Image (No Push)
     runs-on: ubuntu-latest
     needs: build-and-test
-    if: github.event_name == 'pull_request'
+    if: false  # Desabilitado até criar Dockerfile (issue futura)
     
     steps:
       - name: Checkout code
