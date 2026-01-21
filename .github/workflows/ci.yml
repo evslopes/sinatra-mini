@@ -31,8 +31,17 @@ jobs:
       
       - name: Build and Test
         run: |
-          cd sinatra-mini
-          ./mvnw clean verify -B
+          # If repository layout uses sinatra-mini subdirectory (refactor), switch into it
+          if [ -f "sinatra-mini/pom.xml" ]; then
+            cd sinatra-mini
+          fi
+
+          # Prefer the Maven wrapper if available, fallback to system mvn
+          if [ -x ./mvnw ]; then
+            ./mvnw clean verify -B
+          else
+            mvn clean verify -B
+          fi
       
       - name: Archive test reports
         if: failure()
