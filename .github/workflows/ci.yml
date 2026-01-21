@@ -54,26 +54,6 @@ jobs:
         run: mvn verify -B -P integration-tests
         continue-on-error: false
       
-      - name: Generate test coverage report
-        run: mvn jacoco:report
-      
-      - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v3
-        with:
-          files: ./target/site/jacoco/jacoco.xml
-          flags: unittests
-          name: codecov-umbrella
-          fail_ci_if_error: false
-      
-      - name: Publish test results
-        uses: EnricoMi/publish-unit-test-result-action@v2
-        if: always()
-        with:
-          files: |
-            target/surefire-reports/*.xml
-            target/failsafe-reports/*.xml
-          check_name: Test Results (Java ${{ matrix.java }})
-      
       - name: Archive test reports
         if: failure()
         uses: actions/upload-artifact@v4
