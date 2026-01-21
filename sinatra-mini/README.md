@@ -223,7 +223,45 @@ sinatra-mini/
 │   └── data.sql          # Dados iniciais
 ├── src/test/java/        # Testes
 └── docs/                 # Documentação técnica
+    ├── story-1.1-indices-compostos.md
+    ├── story-2.1-relatorio-csv.md
+    ├── story-2.2-maior-intervalo-sem-vendas.md
+    ├── story-2.3-dia-de-menor-venda.md
+    └── story-2.4-media-semanal.md
 ```
+
+## Documentação das Stories
+
+Cada funcionalidade implementada está documentada em sua própria story:
+
+### Épico 1: Otimização Estrutural (Foundation)
+
+- **[Story 1.1 - Índices Compostos](docs/story-1.1-indices-compostos.md)**
+  - Implementação de índices compostos `(loja_id, data_pedido)`
+  - Otimização de queries para O(log N)
+  - Validação via EXPLAIN PLAN
+
+### Épico 2: APIs Analíticas (Core Business)
+
+- **[Story 2.1 - Relatório CSV](docs/story-2.1-relatorio-csv.md)**
+  - Exportação de vendas diárias em CSV via streaming
+  - `GET /pedidos/{lojaId}/reports/daily-sales.csv`
+  - Processamento eficiente de grandes volumes sem sobrecarga de memória
+
+- **[Story 2.2 - Maior Intervalo Sem Vendas](docs/story-2.2-maior-intervalo-sem-vendas.md)**
+  - Identificação do maior período sem vendas
+  - `GET /pedidos/{lojaId}/reports/longest-no-sales`
+  - Algoritmo O(N) sobre dias com vendas
+
+- **[Story 2.3 - Dia de Menor Venda](docs/story-2.3-dia-de-menor-venda.md)**
+  - Dia com menor total de vendas no período
+  - `GET /pedidos/{lojaId}/reports/min-day-sales`
+  - Suporte a fusos horários via parâmetro `zoneId`
+
+- **[Story 2.4 - Média Semanal](docs/story-2.4-media-semanal.md)**
+  - Média de vendas por dia da semana (Segunda-Domingo)
+  - `GET /pedidos/{lojaId}/reports/weekly-average`
+  - Agregação por `DayOfWeek` com conversão de timezone
 
 ## Melhorias Futuras (Sugestões)
 
