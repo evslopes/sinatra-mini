@@ -1,2 +1,2 @@
-docs/
-.github/
+# Ignorar apenas docs/ na raiz, não sinatra-mini/docs/
+/docs/
