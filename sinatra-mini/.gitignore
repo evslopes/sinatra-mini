@@ -37,5 +37,6 @@ build/
 ### Mac OS ###
 .DS_Store
 
-### Doc As IS ###
-../docs/
+### Project Docs ###
+# Apenas ignorar docs na raiz do projeto (não sinatra-mini/docs/)
+# ../docs/ está comentado - permitir docs/ dentro de sinatra-mini/
