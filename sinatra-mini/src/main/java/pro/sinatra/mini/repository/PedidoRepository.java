@@ -21,4 +21,52 @@ public interface PedidoRepository extends JpaRepository<Pedido, Long> {
 		   "GROUP BY function('DATE', p.dataPedido) " +
 		   "ORDER BY function('DATE', p.dataPedido)")
 	Stream<DailySalesProjection> streamDailySalesByLoja(@Param("lojaId") Long lojaId);
+<<<<<<< Updated upstream
+=======
+
+	// Stream daily totals per date for a given loja within optional date bounds
+	@Query("SELECT cast(p.dataPedido as date) as dia, SUM(p.total) as total " +
+			"FROM Pedido p WHERE p.loja.id = :lojaId " +
+			"AND (:start IS NULL OR cast(p.dataPedido as date) >= :start) " +
+			"AND (:end IS NULL OR cast(p.dataPedido as date) <= :end) " +
+			"GROUP BY cast(p.dataPedido as date) " +
+			"ORDER BY cast(p.dataPedido as date)")
+	Stream<DailySalesProjection> streamDailySalesByLojaBetween(
+			@Param("lojaId") Long lojaId,
+			@Param("start") java.time.LocalDate start,
+			@Param("end") java.time.LocalDate end);
+
+	// Projection for distinct sale days (used by Story 2.2)
+	interface DailySaleDaysProjection {
+		java.time.LocalDate getDia();
+	}
+
+	// Stream distinct days with sales for a loja within optional date bounds
+	@Query("SELECT DISTINCT cast(p.dataPedido as date) as dia " +
+			"FROM Pedido p WHERE p.loja.id = :lojaId " +
+			"AND (:start IS NULL OR cast(p.dataPedido as date) >= :start) " +
+			"AND (:end IS NULL OR cast(p.dataPedido as date) <= :end) " +
+			"ORDER BY dia")
+	Stream<DailySaleDaysProjection> streamDistinctSaleDaysByLoja(
+			@Param("lojaId") Long lojaId,
+			@Param("start") java.time.LocalDate start,
+			@Param("end") java.time.LocalDate end);
+
+	    // Projection for raw sales with timestamp and total (used by Story 2.3)
+	    interface SaleProjection {
+		java.time.LocalDateTime getDataPedido();
+		Double getTotal();
+	    }
+
+	    // Stream sales with timestamps for a loja within optional date-time bounds
+	    @Query("SELECT p.dataPedido as dataPedido, p.total as total " +
+		    "FROM Pedido p WHERE p.loja.id = :lojaId " +
+		    "AND (:start IS NULL OR p.dataPedido >= :start) " +
+		    "AND (:end IS NULL OR p.dataPedido <= :end) " +
+		    "ORDER BY p.dataPedido")
+	    Stream<SaleProjection> streamSalesByLoja(
+		    @Param("lojaId") Long lojaId,
+		    @Param("start") java.time.LocalDateTime start,
+		    @Param("end") java.time.LocalDateTime end);
+>>>>>>> Stashed changes
 }
