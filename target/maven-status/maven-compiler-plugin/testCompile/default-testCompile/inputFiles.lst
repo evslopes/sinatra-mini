@@ -1,0 +1,13 @@
+/home/jhhdev/Projetos/sinatra-mini/sinatra-mini/src/test/java/pro/sinatra/mini/integration/PedidoCrudIntegrationTest.java
+/home/jhhdev/Projetos/sinatra-mini/sinatra-mini/src/test/java/pro/sinatra/mini/controller/PedidoControllerErrorTest.java
+/home/jhhdev/Projetos/sinatra-mini/sinatra-mini/src/test/java/pro/sinatra/mini/integration/PedidoSchemaIntegrationTest.java
+/home/jhhdev/Projetos/sinatra-mini/sinatra-mini/src/test/java/pro/sinatra/mini/validation/PedidoValidationTest.java
+/home/jhhdev/Projetos/sinatra-mini/sinatra-mini/src/test/java/pro/sinatra/mini/integration/PedidoLoadPerformanceTest.java
+/home/jhhdev/Projetos/sinatra-mini/sinatra-mini/src/test/java/pro/sinatra/mini/service/MaiorIntervaloSemVendasServiceTest.java
+/home/jhhdev/Projetos/sinatra-mini/sinatra-mini/src/test/java/pro/sinatra/mini/service/DiaMenorVendaServiceTest.java
+/home/jhhdev/Projetos/sinatra-mini/sinatra-mini/src/test/java/pro/sinatra/mini/integration/PedidoCsvExportIntegrationTest.java
+/home/jhhdev/Projetos/sinatra-mini/sinatra-mini/src/test/java/pro/sinatra/mini/integration/PedidoMinDaySalesIntegrationTest.java
+/home/jhhdev/Projetos/sinatra-mini/sinatra-mini/src/test/java/pro/sinatra/mini/service/MediaSemanalServiceTest.java
+/home/jhhdev/Projetos/sinatra-mini/sinatra-mini/src/test/java/pro/sinatra/mini/integration/PedidoWeeklyAverageIntegrationTest.java
+/home/jhhdev/Projetos/sinatra-mini/sinatra-mini/src/test/java/pro/sinatra/mini/entity/PedidoEntityAnnotationTest.java
+/home/jhhdev/Projetos/sinatra-mini/sinatra-mini/src/test/java/pro/sinatra/mini/integration/PedidoLongestNoSalesIntegrationTest.java

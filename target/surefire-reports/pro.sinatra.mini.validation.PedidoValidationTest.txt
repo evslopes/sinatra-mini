@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: pro.sinatra.mini.validation.PedidoValidationTest
+-------------------------------------------------------------------------------
+Tests run: 16, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.065 s -- in pro.sinatra.mini.validation.PedidoValidationTest
