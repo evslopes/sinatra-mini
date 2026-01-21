@@ -23,7 +23,7 @@ public class DiaMenorVendaService {
     @Transactional(readOnly = true)
     public Optional<MenorVendaDiaDTO> calcularDiaMenorVenda(Long lojaId, LocalDate start, LocalDate end, ZoneId zone) {
         Objects.requireNonNull(lojaId, "lojaId must not be null");
-        if (zone == null) zone = ZoneId.of("UTC");
+        ZoneId targetZone = (zone == null) ? ZoneId.of("UTC") : zone;
 
         LocalDateTime startDt = (start == null) ? null : start.atStartOfDay();
         LocalDateTime endDt = (end == null) ? null : end.atTime(LocalTime.MAX);
@@ -36,7 +36,7 @@ public class DiaMenorVendaService {
                 if (ldt == null) return;
                 // Interpret stored LocalDateTime as UTC instant, then convert to target zone
                 Instant instant = ldt.atOffset(ZoneOffset.UTC).toInstant();
-                LocalDate localDay = instant.atZone(zone).toLocalDate();
+                LocalDate localDay = instant.atZone(targetZone).toLocalDate();
                 totals.merge(localDay, s.getTotal() == null ? 0.0 : s.getTotal(), Double::sum);
             });
         }

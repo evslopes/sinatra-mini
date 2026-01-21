@@ -37,4 +37,21 @@ public interface PedidoRepository extends JpaRepository<Pedido, Long> {
 			@Param("lojaId") Long lojaId,
 			@Param("start") java.time.LocalDate start,
 			@Param("end") java.time.LocalDate end);
+
+	    // Projection for raw sales with timestamp and total (used by Story 2.3)
+	    interface SaleProjection {
+		java.time.LocalDateTime getDataPedido();
+		Double getTotal();
+	    }
+
+	    // Stream sales with timestamps for a loja within optional date-time bounds
+	    @Query("SELECT p.dataPedido as dataPedido, p.total as total " +
+		    "FROM Pedido p WHERE p.loja.id = :lojaId " +
+		    "AND (:start IS NULL OR p.dataPedido >= :start) " +
+		    "AND (:end IS NULL OR p.dataPedido <= :end) " +
+		    "ORDER BY p.dataPedido")
+	    Stream<SaleProjection> streamSalesByLoja(
+		    @Param("lojaId") Long lojaId,
+		    @Param("start") java.time.LocalDateTime start,
+		    @Param("end") java.time.LocalDateTime end);
 }
