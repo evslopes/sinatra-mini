@@ -20,6 +20,10 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.util.stream.Stream;
 import pro.sinatra.mini.repository.PedidoRepository;
+import pro.sinatra.mini.service.DiaMenorVendaService;
+import pro.sinatra.mini.reports.MenorVendaDiaDTO;
+import java.time.LocalDate;
+import java.time.ZoneId;
 
 @RestController
 @RequestMapping("/pedidos")
@@ -29,6 +33,9 @@ public class PedidoController {
 
     @Autowired
     private MaiorIntervaloSemVendasService maiorIntervaloService;
+
+    @Autowired
+    private DiaMenorVendaService diaMenorVendaService;
 
     @GetMapping
     public List<Pedido> findAll() {
@@ -84,5 +91,19 @@ public class PedidoController {
             @RequestParam(name = "end", required = false)
             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) java.time.LocalDate end) {
         return maiorIntervaloService.calcularMaiorIntervalo(lojaId, start, end);
+    }
+
+    @GetMapping("/{lojaId}/reports/min-day-sales")
+    public ResponseEntity<MenorVendaDiaDTO> minDaySales(
+            @PathVariable Long lojaId,
+            @RequestParam(name = "start", required = false)
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate start,
+            @RequestParam(name = "end", required = false)
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate end,
+            @RequestParam(name = "zoneId", required = false) String zoneId) {
+        ZoneId zone = (zoneId == null) ? ZoneId.of("UTC") : ZoneId.of(zoneId);
+        return diaMenorVendaService.calcularDiaMenorVenda(lojaId, start, end, zone)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.noContent().build());
     }
 }
