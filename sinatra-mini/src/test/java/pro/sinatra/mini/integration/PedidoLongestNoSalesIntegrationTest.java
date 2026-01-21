@@ -79,7 +79,7 @@ public class PedidoLongestNoSalesIntegrationTest {
 
         String url = "http://localhost:" + port + "/pedidos/" + lojaId + "/reports/longest-no-sales?start=2025-01-01&end=2025-01-15";
         ResponseEntity<PeriodoDTO> resp = restTemplate.getForEntity(url, PeriodoDTO.class);
-        assertEquals(200, resp.getStatusCodeValue());
+        assertEquals(200, resp.getStatusCode().value());
         PeriodoDTO dto = resp.getBody();
         assertNotNull(dto);
         assertEquals(LocalDate.of(2025,1,8), dto.dataInicial());

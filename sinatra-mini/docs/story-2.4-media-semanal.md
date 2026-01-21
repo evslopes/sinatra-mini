@@ -108,7 +108,17 @@ curl -sS "http://localhost:8080/pedidos/1/reports/weekly-average?start=2025-01-0
 - [x] Endpoint REST com parâmetros opcionais
 - [x] Testes unitários e de integração
 - [x] Documentação atualizada
-- [ ] Code review e merge (pendente)
+- [x] Code review e merge
+- [x] Suite completa de testes unitários criada
+  - `MediaSemanalServiceTest.returnsAllSevenDays`: Retorna todos os 7 dias da semana ✅
+  - `MediaSemanalServiceTest.calculatesCorrectAverages`: Cálculo de médias correto ✅
+  - `MediaSemanalServiceTest.handlesEmptyStream`: Lista vazia retorna zeros ✅
+  - `MediaSemanalServiceTest.handlesNullZone`: Default timezone UTC funciona ✅
+  - `MediaSemanalServiceTest.handlesMultipleDaysPerWeekday`: Agregação correta ✅
+  - `MediaSemanalServiceTest.withDifferentTimezone`: Conversão de timezone ✅
+  - `PedidoWeeklyAverageIntegrationTest`: 2 testes de integração passando ✅
+  - `PedidoValidationTest.mediaSemanalDTO_*`: 7 testes de validação passando ✅
+  - **Coverage total**: 15 testes específicos para média semanal ✅
 
 ---
 

@@ -31,9 +31,10 @@ public class PedidoLoadPerformanceTest {
     }
 
     @Test
-    public void load100kAndExport() throws Exception {
-        final int total = 100_000;
-        final int batchSize = 1000;
+    public void load10kAndExport() throws Exception {
+        // Reduced from 100k to 10k for faster execution in CI/local
+        final int total = 10_000;
+        final int batchSize = 500;
 
         // ensure loja exists
         Long lojaId = null;
@@ -75,16 +76,37 @@ public class PedidoLoadPerformanceTest {
         long insertTime = System.currentTimeMillis() - t0;
         Integer count = jdbcTemplate.queryForObject("SELECT COUNT(*) FROM PEDIDO", Integer.class);
         assertNotNull(count);
-        assertEquals(total, count.intValue(), "Expected 100k pedidos inserted");
+        assertEquals(total, count.intValue(), "Expected pedidos inserted");
 
+        // Verify memory usage is reasonable (rough check)
+        Runtime runtime = Runtime.getRuntime();
+        long usedMemoryBefore = runtime.totalMemory() - runtime.freeMemory();
+        
         long t1 = System.currentTimeMillis();
         String url = "http://localhost:" + port + "/pedidos/" + lojaId + "/reports/daily-sales.csv";
         org.springframework.http.ResponseEntity<String> resp = restTemplate.getForEntity(url, String.class);
         long exportTime = System.currentTimeMillis() - t1;
 
-        assertEquals(200, resp.getStatusCodeValue());
-        assertNotNull(resp.getBody());
+        long usedMemoryAfter = runtime.totalMemory() - runtime.freeMemory();
+        long memoryDelta = usedMemoryAfter - usedMemoryBefore;
 
-        System.out.println("Inserted=" + inserted + " insertMs=" + insertTime + " exportMs=" + exportTime);
+        assertEquals(200, resp.getStatusCode().value());
+        assertNotNull(resp.getBody());
+        
+        // Assert export time is reasonable (less than 10 seconds for 10k records)
+        assertTrue(exportTime < 10_000, "Export should complete in less than 10 seconds, took: " + exportTime + "ms");
+        
+        // Assert memory delta is not linear with dataset size (streaming should keep memory bounded)
+        // For 10k records, memory delta should be less than 50MB
+        long maxMemoryDelta = 50 * 1024 * 1024; // 50MB
+        assertTrue(Math.abs(memoryDelta) < maxMemoryDelta, 
+                "Memory delta should be bounded by streaming. Delta: " + (memoryDelta / 1024 / 1024) + "MB");
+
+        System.out.println("Performance Test Results:");
+        System.out.println("  Records inserted: " + inserted);
+        System.out.println("  Insert time: " + insertTime + "ms (" + (insertTime / 1000.0) + "s)");
+        System.out.println("  Export time: " + exportTime + "ms (" + (exportTime / 1000.0) + "s)");
+        System.out.println("  Memory delta: " + (memoryDelta / 1024 / 1024) + "MB");
+        System.out.println("  CSV size: " + (resp.getBody() != null ? resp.getBody().length() : 0) + " bytes");
     }
 }

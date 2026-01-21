@@ -282,7 +282,7 @@ Uma tarefa está completa quando:
 
 ## Autor
 
-Desenvolvido como parte do desafio técnico Sinatra Mini.
+Elvis Herllain, desenvolvido como parte do desafio técnico Sinatra Mini.
 
 ## Licença
 

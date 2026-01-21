@@ -78,7 +78,7 @@ public class PedidoMinDaySalesIntegrationTest {
 
         String url = "http://localhost:" + port + "/pedidos/" + lojaId + "/reports/min-day-sales?start=2025-01-01&end=2025-01-03&zoneId=UTC";
         ResponseEntity<MenorVendaDiaDTO> resp = restTemplate.getForEntity(url, MenorVendaDiaDTO.class);
-        assertEquals(200, resp.getStatusCodeValue());
+        assertEquals(200, resp.getStatusCode().value());
         MenorVendaDiaDTO dto = resp.getBody();
         assertNotNull(dto);
         assertEquals(d2, dto.dia());

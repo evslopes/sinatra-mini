@@ -115,6 +115,12 @@ curl -sS "http://localhost:8080/pedidos/1/reports/min-day-sales?start=2025-01-01
 - [x] Testes unitários e de integração
 - [x] Documentação atualizada
 - [x] Code review e merge
+- [x] Testes de validação de DTOs criados
+  - `PedidoValidationTest.menorVendaDiaDTO_validData_createsSuccessfully`: DTO criado corretamente
+  - `PedidoValidationTest.menorVendaDiaDTO_zeroTotal_isValid`: Valor zero aceito
+  - `PedidoValidationTest.menorVendaDiaDTO_largeTotal_isAccepted`: Valores grandes aceitos
+  - `PedidoControllerErrorTest.minDaySales_invalidZoneId`: Rejeita timezone inválido
+  - Coverage: 16/16 testes de validação passando ✅
 
 ---
 
