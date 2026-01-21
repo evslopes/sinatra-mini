@@ -22,7 +22,10 @@ import java.util.stream.Stream;
 import pro.sinatra.mini.repository.PedidoRepository;
 import pro.sinatra.mini.service.DiaMenorVendaService;
 import pro.sinatra.mini.reports.MenorVendaDiaDTO;
+<<<<<<< HEAD
 import pro.sinatra.mini.service.MediaSemanalService;
+=======
+>>>>>>> origin/main
 import java.time.LocalDate;
 import java.time.ZoneId;
 
@@ -38,9 +41,12 @@ public class PedidoController {
     @Autowired
     private DiaMenorVendaService diaMenorVendaService;
 
+<<<<<<< HEAD
     @Autowired
     private MediaSemanalService mediaSemanalService;
 
+=======
+>>>>>>> origin/main
     @GetMapping
     public List<Pedido> findAll() {
         return pedidoService.findAll();
@@ -110,6 +116,7 @@ public class PedidoController {
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.noContent().build());
     }
+<<<<<<< HEAD
 
     @GetMapping("/{lojaId}/reports/weekly-average")
     public java.util.List<pro.sinatra.mini.reports.MediaSemanalDTO> weeklyAverage(
@@ -252,4 +259,6 @@ public class PedidoController {
         return mediaSemanalService.calcularMediaSemanal(lojaId, start, end, zone);
     }
 >>>>>>> Stashed changes
+=======
+>>>>>>> origin/main
 }
