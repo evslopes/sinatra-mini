@@ -129,6 +129,9 @@ mvn test -Dtest=PedidoCsvExportIntegrationTest
 - [x] Teste de integração passando
 - [x] Documentação atualizada
 - [x] Code review e merge em `main`
+- [x] **NOVO**: Suporte a LazyInitializationException resolvido
+  - `@JsonIgnore` adicionado em `Pedido.itens` para evitar serialização de coleção lazy
+  - Teste `PedidoCsvExportIntegrationTest` passando (100% sucesso)
 
 ---
 

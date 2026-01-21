@@ -99,7 +99,7 @@ public class PedidoCsvExportIntegrationTest {
         String url = "http://localhost:" + port + "/pedidos/" + lojaId + "/reports/daily-sales.csv";
         ResponseEntity<String> resp = restTemplate.getForEntity(url, String.class);
 
-        assertEquals(200, resp.getStatusCodeValue());
+        assertEquals(200, resp.getStatusCode().value());
         // headers: content-disposition and content-type
         assertTrue(resp.getHeaders().containsKey(HttpHeaders.CONTENT_DISPOSITION), "Content-Disposition must be present");
         String cd = resp.getHeaders().getFirst(HttpHeaders.CONTENT_DISPOSITION);

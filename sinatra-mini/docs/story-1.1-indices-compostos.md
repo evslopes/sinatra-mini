@@ -155,6 +155,10 @@ Se necessário, considerar:
 - [x] Explain Plan confirmado (queries usam o índice)
 - [x] Documentação atualizada no README.md
 - [x] Código revisado e merged na `main`
+- [x] Testes unitários e de integração criados
+  - `PedidoEntityAnnotationTest`: Valida presença do índice composto
+  - `PedidoSchemaIntegrationTest`: Valida schema do banco H2
+  - `PedidoLoadPerformanceTest`: Testa performance com 10k registros (skipped, requer `-Dperf=true`)
 
 ---
 

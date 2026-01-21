@@ -118,6 +118,10 @@ curl -sS "http://localhost:8080/pedidos/1/reports/longest-no-sales?start=2025-01
 - [x] Testes unitários e de integração
 - [x] Documentação atualizada
 - [x] Code review e merge
+- [x] Testes de erro e edge cases criados
+  - `PedidoControllerErrorTest.longestNoSales_invalidDateRange`: Valida range de datas inválido
+  - `PedidoControllerErrorTest.longestNoSales_singleDay_returnsOneDayPeriod`: Edge case de período de 1 dia
+  - Coverage: 10/10 testes de erro passando ✅
 
 ---
 
