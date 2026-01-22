@@ -1,0 +1,45 @@
+# Build artifacts
+target/
+!target/*.jar
+
+# IDE
+.idea/
+*.iml
+.vscode/
+.settings/
+.classpath
+.project
+
+# Git
+.git/
+.gitignore
+
+# Docker
+Dockerfile
+docker-compose.yml
+.dockerignore
+
+# Documentation
+README.md
+docs/
+documentacao/
+
+# Logs
+*.log
+logs/
+
+# Test data
+src/test/
+*.db
+
+# Environment
+.env
+.env.*
+flyway.conf
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Kubernetes
+k8s/

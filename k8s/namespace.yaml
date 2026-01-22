@@ -1,0 +1,8 @@
+# Namespace para isolamento
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: sinatra-mini
+  labels:
+    app: sinatra-mini
+    environment: production

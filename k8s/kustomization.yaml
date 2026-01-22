@@ -1,0 +1,41 @@
+# Kustomization para gerenciamento declarativo
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: sinatra-mini
+
+resources:
+- namespace.yaml
+- configmap.yaml
+- secrets.yaml
+- pvc.yaml
+- postgres-deployment.yaml
+- redis-deployment.yaml
+- app-deployment.yaml
+- ingress.yaml
+
+# Labels comuns aplicados a todos os recursos
+commonLabels:
+  app.kubernetes.io/name: sinatra-mini
+  app.kubernetes.io/version: "1.1.0"
+  app.kubernetes.io/component: saas
+  app.kubernetes.io/part-of: sinatra-platform
+  app.kubernetes.io/managed-by: kubectl
+
+# Imagens - sobrescrever com registry real
+images:
+- name: sinatra-mini
+  newName: your-registry.io/sinatra-mini
+  newTag: v1.1.0
+
+# ConfigMap Generator (alternativa ao configmap.yaml)
+# configMapGenerator:
+# - name: sinatra-app-config
+#   literals:
+#   - SPRING_PROFILES_ACTIVE=prod
+
+# Secret Generator (NUNCA commitar senhas reais)
+# secretGenerator:
+# - name: sinatra-secrets
+#   literals:
+#   - DB_PASSWORD=CHANGE_ME
