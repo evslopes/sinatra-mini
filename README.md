@@ -6,7 +6,10 @@ Sistema SaaS simplificado para gestão de vendas de múltiplas lojas, com foco e
 
 - **Linguagem**: Java 17
 - **Framework**: Spring Boot 3.2.12
-- **Banco de Dados**: H2 (in-memory)
+- **Banco de Dados (Produção)**: PostgreSQL 15+
+- **Banco de Dados (Dev/Teste)**: H2 (in-memory)
+- **Migrations**: Flyway
+- **Cache**: Caffeine (L1) + Redis (L2 - distribuído)
 - **Build**: Maven
 - **Persistência**: JPA / Hibernate
 
@@ -220,14 +223,18 @@ sinatra-mini/
 │   └── reports/          # DTOs de relatórios
 ├── src/main/resources/
 │   ├── application.properties
-│   └── data.sql          # Dados iniciais
+│   ├── application-dev.yml         # Perfil PostgreSQL dev
+│   ├── application-prod.yml        # Perfil PostgreSQL prod
+│   ├── application-test-postgres.yml # Perfil TestContainers
+│   ├── db/migration/               # Flyway migrations
+│   │   ├── V1__initial_schema.sql
+│   │   ├── V2__add_performance_indexes.sql
+│   │   └── V3__seed_test_data.sql
+│   └── data.sql          # Dados iniciais (H2 apenas)
 ├── src/test/java/        # Testes
+├── docker-compose.yml    # PostgreSQL + Redis
+├── flyway.conf.example   # Template Flyway config
 └── docs/                 # Documentação técnica
-    ├── story-1.1-indices-compostos.md
-    ├── story-2.1-relatorio-csv.md
-    ├── story-2.2-maior-intervalo-sem-vendas.md
-    ├── story-2.3-dia-de-menor-venda.md
-    └── story-2.4-media-semanal.md
 ```
 
 ## Documentação das Stories
