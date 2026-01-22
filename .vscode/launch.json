@@ -1,14 +1,23 @@
 {
-    "configurations": [
-        {
-            "type": "java",
-            "name": "Spring Boot-MiniApplication<sinatra-mini>",
-            "request": "launch",
-            "cwd": "${workspaceFolder}",
-            "mainClass": "pro.sinatra.mini.MiniApplication",
-            "projectName": "sinatra-mini",
-            "args": "",
-            "envFile": "${workspaceFolder}/.env"
-        }
-    ]
+  "version": "0.2.0",
+  "configurations": [
+    {
+        "type": "java",
+        "name": "MiniApplication",
+        "request": "launch",
+        "mainClass": "pro.sinatra.mini.MiniApplication",
+        "projectName": ""
+    },
+    {
+        "type": "java",
+        "name": "Debug MiniApplication (Spring Boot)",
+        "request": "launch",
+        "mainClass": "pro.sinatra.mini.MiniApplication",
+        "projectName": "sinatra-mini",
+        "args": "",
+        "env": {},
+        "vmArgs": "-Dspring.profiles.active=dev",
+        "cwd": "${workspaceFolder}"
+    }
+]
 }

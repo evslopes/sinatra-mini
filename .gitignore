@@ -1,2 +1,58 @@
-# Ignorar apenas docs/ na raiz, não sinatra-mini/docs/
-/docs/
+# Java / Maven / Spring standard ignores
+
+# Build output
+/target/
+
+# Maven wrapper
+/.mvn/
+/.mvnw
+/.mvnw.cmd
+
+# Compiled class files
+*.class
+
+# Log files
+logs/
+*.log
+
+# Package files
+*.jar
+*.war
+*.ear
+
+# Eclipse
+.classpath
+.project
+.settings/
+
+# IntelliJ
+*.iml
+.idea/
+
+# NetBeans
+/nbproject/private/
+/build/
+/nbbuild/
+/dist/
+
+# VS Code
+.vscode/
+
+# OS files
+.DS_Store
+
+# Temporary files
+tmp/
+temp/
+
+# Spring Boot
+spring.log
+hs_err_pid*
+
+# H2 database files
+*.h2.db
+*.mv.db
+*.trace.db
+
+
+
