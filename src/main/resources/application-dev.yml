@@ -23,6 +23,7 @@ spring:
         order_inserts: true
         order_updates: true
     show-sql: true
+    defer-datasource-initialization: true
 
   flyway:
     enabled: true

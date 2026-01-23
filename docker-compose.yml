@@ -16,10 +16,13 @@ services:
       SPRING_REDIS_HOST: redis
       SPRING_REDIS_PASSWORD: ${REDIS_PASSWORD:-dev_redis_password}
       SPRING_REDIS_PORT: 6379
+      SPRING_JPA_DEFER_DATASOURCE_INITIALIZATION: "true"
       JAVA_OPTS: "-Xms512m -Xmx1024m"
     ports:
       - "8080:8080"
     depends_on:
+      flyway:
+        condition: service_completed_successfully
       postgres:
         condition: service_healthy
       redis:
@@ -70,6 +73,19 @@ services:
     networks:
       - sinatra-network
     restart: unless-stopped
+
+  flyway:
+    image: flyway/flyway:9
+    container_name: sinatra_flyway
+    command: -url=jdbc:postgresql://postgres:5432/sinatra_dev -user=sinatra_user -password=${DB_PASSWORD:-dev_password} -locations=filesystem:/flyway/sql migrate
+    volumes:
+      - ./src/main/resources/db/migration:/flyway/sql:ro
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - sinatra-network
+    restart: "no"
 
 volumes:
   postgres_data:

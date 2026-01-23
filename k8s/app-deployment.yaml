@@ -6,6 +6,11 @@ metadata:
   namespace: sinatra-mini
   labels:
     app: sinatra-app
+    app.kubernetes.io/component: saas
+    app.kubernetes.io/managed-by: kubectl
+    app.kubernetes.io/name: sinatra-mini
+    app.kubernetes.io/part-of: sinatra-platform
+    app.kubernetes.io/version: 1.1.0
     tier: application
 spec:
   replicas: 3 # Alta disponibilidade com 3 réplicas
@@ -17,16 +22,26 @@ spec:
   selector:
     matchLabels:
       app: sinatra-app
+      app.kubernetes.io/component: saas
+      app.kubernetes.io/managed-by: kubectl
+      app.kubernetes.io/name: sinatra-mini
+      app.kubernetes.io/part-of: sinatra-platform
+      app.kubernetes.io/version: 1.1.0
   template:
     metadata:
       labels:
         app: sinatra-app
+        app.kubernetes.io/component: saas
+        app.kubernetes.io/managed-by: kubectl
+        app.kubernetes.io/name: sinatra-mini
+        app.kubernetes.io/part-of: sinatra-platform
+        app.kubernetes.io/version: 1.1.0
         tier: application
     spec:
       containers:
       - name: sinatra-app
-        image: sinatra-mini:latest # Atualizar com registry (ex: gcr.io/project/sinatra-mini:v1.1.0)
-        imagePullPolicy: Always
+        image: sinatra-mini:local
+        imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 8080
           name: http
@@ -39,7 +54,16 @@ spec:
             secretKeyRef:
               name: sinatra-secrets
               key: DB_PASSWORD
+        - name: SPRING_JPA_DEFER_DATASOURCE_INITIALIZATION
+          value: "true"
+        - name: SPRING_FLYWAY_ENABLED
+          value: "false"
         - name: SPRING_REDIS_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: sinatra-secrets
+              key: REDIS_PASSWORD
+        - name: REDIS_PASSWORD
           valueFrom:
             secretKeyRef:
               name: sinatra-secrets

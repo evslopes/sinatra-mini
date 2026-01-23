@@ -1,7 +1,7 @@
 # Java / Maven / Spring standard ignores
 
 # Build output
-/target/
+target/
 
 # Maven wrapper
 /.mvn/
