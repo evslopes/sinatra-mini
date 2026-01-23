@@ -1,7 +1,7 @@
 package pro.sinatra.mini.config;
 
 import org.flywaydb.core.Flyway;
-import jakarta.sql.DataSource;
+import javax.sql.DataSource;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.event.EventListener;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
