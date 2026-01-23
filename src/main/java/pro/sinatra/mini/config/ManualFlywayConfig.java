@@ -20,10 +20,12 @@ public class ManualFlywayConfig {
     public void migrateAfterStartup() {
         // create a local Flyway instance (do NOT register bean named 'flyway')
         Flyway.configure()
-                .dataSource(this.dataSource)
-                .locations("classpath:db/migration")
-                .load()
-                .migrate();
+            .dataSource(this.dataSource)
+            .locations("classpath:db/migration")
+            .baselineOnMigrate(true)
+            .baselineVersion("0")
+            .load()
+            .migrate();
     }
 }
 
