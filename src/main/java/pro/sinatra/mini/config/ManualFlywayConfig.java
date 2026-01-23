@@ -10,25 +10,20 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class ManualFlywayConfig {
+    private final DataSource dataSource;
 
-    private final ApplicationContext context;
-
-    public ManualFlywayConfig(ApplicationContext context) {
-        this.context = context;
-    }
-
-    @Bean
-    public Flyway flyway(DataSource dataSource) {
-        return Flyway.configure()
-                .dataSource(dataSource)
-                .locations("classpath:db/migration")
-                .load();
+    public ManualFlywayConfig(DataSource dataSource) {
+        this.dataSource = dataSource;
     }
 
     @EventListener(ApplicationReadyEvent.class)
     public void migrateAfterStartup() {
-        Flyway flyway = context.getBean(Flyway.class);
-        flyway.migrate();
+        // create a local Flyway instance (do NOT register bean named 'flyway')
+        Flyway.configure()
+                .dataSource(this.dataSource)
+                .locations("classpath:db/migration")
+                .load()
+                .migrate();
     }
 }
 
