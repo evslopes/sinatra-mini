@@ -1,0 +1,27 @@
+# Flyway Configuration Template
+# Copie este arquivo para flyway.conf e ajuste as credenciais
+
+# PostgreSQL Connection
+flyway.url=jdbc:postgresql://localhost:5432/sinatra_dev
+flyway.user=sinatra_user
+flyway.password=CHANGE_ME
+
+# Migration Settings
+flyway.locations=classpath:db/migration
+flyway.baselineOnMigrate=true
+flyway.baselineVersion=0
+flyway.validateOnMigrate=true
+flyway.cleanDisabled=true
+flyway.outOfOrder=false
+
+# Encoding
+flyway.encoding=UTF-8
+flyway.sqlMigrationPrefix=V
+flyway.sqlMigrationSeparator=__
+flyway.sqlMigrationSuffixes=.sql
+
+# Placeholders
+flyway.placeholderReplacement=false
+
+# Table
+flyway.table=flyway_schema_history
