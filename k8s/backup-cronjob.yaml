@@ -1,0 +1,68 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: sinatra-postgres-backup
+  namespace: sinatra-mini
+spec:
+  schedule: "0 2 * * *" # daily at 02:00 UTC
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 1
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          restartPolicy: OnFailure
+          containers:
+            - name: backup
+              image: postgres:15-alpine
+              imagePullPolicy: IfNotPresent
+              env:
+                - name: DB_HOST
+                  value: postgres-service
+                - name: DB_PORT
+                  value: "5432"
+                - name: DB_NAME
+                  value: sinatra_prod
+                - name: DB_USER
+                  valueFrom:
+                    secretKeyRef:
+                      name: sinatra-secrets
+                      key: db_user
+                - name: DB_PASSWORD
+                  valueFrom:
+                    secretKeyRef:
+                      name: sinatra-secrets
+                      key: db_password
+                - name: S3_BUCKET
+                  valueFrom:
+                    secretKeyRef:
+                      name: sinatra-secrets
+                      key: backups_s3_bucket
+                - name: AWS_REGION
+                  value: "us-east-1"
+                - name: BACKUP_DIR
+                  value: "/backups"
+                - name: RETENTION_DAYS
+                  value: "30"
+              command:
+                - /bin/sh
+                - -c
+                - |
+                  set -e
+                  apk add --no-cache bash ca-certificates gzip
+                  # Install aws cli v2 (simple approach using pip)
+                  apk add --no-cache py3-pip openssl
+                  pip install --no-cache-dir awscli
+                  mkdir -p /backups
+                  export PGPASSWORD="$DB_PASSWORD"
+                  pg_dump -h "$DB_HOST" -p "$DB_PORT" -U "$DB_USER" -F p "$DB_NAME" | gzip > "/backups/sinatra_backup_$(date -u +%Y%m%dT%H%M%SZ).sql.gz"
+                  if [ -n "$S3_BUCKET" ]; then
+                    aws s3 cp /backups/*.sql.gz s3://$S3_BUCKET/ || true
+                  fi
+          volumes:
+            - name: backups
+              persistentVolumeClaim:
+                claimName: postgres-backup-pvc
+          volumeMounts:
+            - name: backups
+              mountPath: /backups

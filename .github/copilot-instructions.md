@@ -1,12 +1,16 @@
 # Instruções Gerais do Projeto — Sinatra Mini
+# Instruções Gerais do Projeto — Sinatra Mini (atualizado)
 
 ## 1. Contexto do Projeto
-Sinatra Mini é um SaaS simplificado para gestão de vendas de múltiplas lojas. O foco principal é **desempenho, escalabilidade e eficiência de memória**, simulando cenário de Big Data e multi‑tenancy.
+Sinatra Mini é um SaaS simplificado para gestão de vendas de múltiplas lojas. O foco principal continua sendo **desempenho, escalabilidade e eficiência de memória**, com prioridade na migração para ambientes de produção conforme o Roadmap (v1.1.0).
 
-## 2. Stack Tecnológica (imutável)
+## 2. Stack Tecnológica (atualizado)
 - **Linguagem**: Java 17
 - **Framework**: Spring Boot 3.2.12
-- **Banco**: H2 (in‑memory)
+- **Banco (produção)**: PostgreSQL 15+
+- **Banco (testes e desenvolvimento leve)**: H2 (in-memory)
+- **Migrations**: Flyway (para versionamento de schema)
+- **Cache**: Caffeine (L1) + Redis (L2) para ambientes distribuídos
 - **Build**: Maven
 - **Persistência**: JPA/Hibernate
 
@@ -37,6 +41,7 @@ src/main/java/pro/sinatra/mini/
   - Exemplo: [PedidoRepository.java](src/main/java/pro/sinatra/mini/repository/PedidoRepository.java)
   - ✅ Definir interface de Projection DENTRO do Repository: `interface DailySalesProjection { ... }`
   - ✅ Retornar `Stream<T>` para queries de relatório
+  - ✅ Preparar queries compatíveis com PostgreSQL (ex.: evitar funções específicas do H2)
 
 - **Entity**: Modelo de dados com índices compostos
   - Exemplo: [Pedido.java](src/main/java/pro/sinatra/mini/entity/Pedido.java#L18-L20)
@@ -106,6 +111,7 @@ src/test/java/pro/sinatra/mini/
 ✅ Usar `@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)`  
 ✅ Limpar dados no `@BeforeEach`: deletar `ITEM_PEDIDO` primeiro (FK constraint)  
 ✅ Usar `TestRestTemplate` para chamadas HTTP  
+✅ Para validação em PostgreSQL, usar `TestContainers` com profile dedicado (`test-postgres`)  
 Exemplo: [PedidoCsvExportIntegrationTest.java](src/test/java/pro/sinatra/mini/integration/PedidoCsvExportIntegrationTest.java)
 
 ## 6. Comandos Essenciais
@@ -114,18 +120,20 @@ Exemplo: [PedidoCsvExportIntegrationTest.java](src/test/java/pro/sinatra/mini/in
 ```bash
 ./mvnw clean install           # Build completo com testes
 ./mvnw test                    # Executar apenas testes
-./mvnw spring-boot:run         # Rodar aplicação
+./mvnw spring-boot:run         # Rodar aplicação (profile: dev)
 ```
 
-### H2 Console
-- URL: `http://localhost:8080/h2-console`
-- JDBC URL: `jdbc:h2:mem:testdb`
-- User: `sa` / Password: `password`
+### Testes em PostgreSQL (TestContainers)
+```bash
+# Executar testes de integração contra Postgres em TestContainers
+./mvnw -DskipUnitTests=false -Dspring.profiles.active=test-postgres test
+```
 
-### Gitflow
-- Features: `feature/<issue-number>-<description>` (ex: `feature/16-postgresql-setup`)
-- Branches principais: `main` (produção) e `develop` (staging)
-- Merge via Pull Request com aprovação obrigatória
+### Flyway (migrations)
+```bash
+# Aplicar migrations localmente
+./mvnw -Dflyway.configFiles=src/main/resources/flyway.conf flyway:migrate
+```
 
 ## 7. Documentação Técnica
 
@@ -138,6 +146,8 @@ Para decisões arquiteturais detalhadas, consultar:
 
 ✅ Código compila e roda sem erros  
 ✅ Testes passam (`./mvnw test`)  
+✅ Compatibilidade verificada contra PostgreSQL (TestContainers)  
+✅ Migrations gerenciadas por Flyway  
 ✅ Sem violações de performance (sem full table scans, sem `findAll()` em tabelas grandes)  
 ✅ Código legível com responsabilidades claras por camada (SRP)  
 ✅ Índices compostos criados para queries filtradas

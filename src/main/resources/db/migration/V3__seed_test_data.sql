@@ -41,30 +41,39 @@ BEGIN
     -- Data base: 30 dias atrás
     base_date := CURRENT_TIMESTAMP - INTERVAL '30 days';
     
-    -- Inserir 50 pedidos com padrões variados
+    -- Inserir 50 pedidos com padrões variados (idempotente)
     FOR i IN 1..50 LOOP
-        INSERT INTO pedido (numero_pedido, loja_id, data_pedido, status, valor_total)
-        VALUES (
-            'PED-CENTRO-' || LPAD(i::TEXT, 5, '0'),
-            loja_centro_id,
-            base_date + (i || ' days')::INTERVAL + (FLOOR(RANDOM() * 12) || ' hours')::INTERVAL,
-            CASE 
-                WHEN i % 10 = 0 THEN 'CANCELADO'
-                WHEN i % 5 = 0 THEN 'PROCESSANDO'
-                ELSE 'CONCLUIDO'
-            END,
-            ROUND((RANDOM() * 5000 + 500)::NUMERIC, 2)
-        );
-        
-        -- Inserir 2-5 itens por pedido
-        INSERT INTO item_pedido (pedido_id, produto_id, quantidade, preco_unitario, subtotal)
-        SELECT 
-            currval('pedido_id_seq'),
-            produto_ids[FLOOR(RANDOM() * ARRAY_LENGTH(produto_ids, 1) + 1)],
-            FLOOR(RANDOM() * 5 + 1)::INTEGER,
-            ROUND((RANDOM() * 1000 + 100)::NUMERIC, 2),
-            ROUND((RANDOM() * 5000 + 100)::NUMERIC, 2)
-        FROM generate_series(1, FLOOR(RANDOM() * 4 + 2)::INTEGER);
+        DECLARE
+            pedido_num TEXT := 'PED-CENTRO-' || LPAD(i::TEXT, 5, '0');
+            exists_pedido BOOLEAN;
+            new_pedido_id BIGINT;
+        BEGIN
+            SELECT EXISTS (SELECT 1 FROM pedido WHERE numero_pedido = pedido_num) INTO exists_pedido;
+            IF NOT exists_pedido THEN
+                INSERT INTO pedido (numero_pedido, loja_id, data_pedido, status, valor_total)
+                VALUES (
+                    pedido_num,
+                    loja_centro_id,
+                    base_date + (i || ' days')::INTERVAL + (FLOOR(RANDOM() * 12) || ' hours')::INTERVAL,
+                    CASE 
+                        WHEN i % 10 = 0 THEN 'CANCELADO'
+                        WHEN i % 5 = 0 THEN 'PROCESSANDO'
+                        ELSE 'CONCLUIDO'
+                    END,
+                    ROUND((RANDOM() * 5000 + 500)::NUMERIC, 2)
+                ) RETURNING id INTO new_pedido_id;
+
+                -- Inserir 2-5 itens por pedido
+                INSERT INTO item_pedido (pedido_id, produto_id, quantidade, preco_unitario, subtotal)
+                SELECT 
+                    new_pedido_id,
+                    produto_ids[FLOOR(RANDOM() * ARRAY_LENGTH(produto_ids, 1) + 1)],
+                    FLOOR(RANDOM() * 5 + 1)::INTEGER,
+                    ROUND((RANDOM() * 1000 + 100)::NUMERIC, 2),
+                    ROUND((RANDOM() * 5000 + 100)::NUMERIC, 2)
+                FROM generate_series(1, FLOOR(RANDOM() * 4 + 2)::INTEGER);
+            END IF;
+        END;
     END LOOP;
 END $$;
 

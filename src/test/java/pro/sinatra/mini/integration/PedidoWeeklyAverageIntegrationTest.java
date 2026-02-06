@@ -22,7 +22,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class PedidoWeeklyAverageIntegrationTest {
+public class PedidoWeeklyAverageIntegrationTest extends pro.sinatra.mini.test.AbstractPostgresIntegrationTest {
 
     @LocalServerPort
     private int port;
@@ -52,9 +52,10 @@ public class PedidoWeeklyAverageIntegrationTest {
         } else {
             var keyHolder = new org.springframework.jdbc.support.GeneratedKeyHolder();
             jdbcTemplate.update(conn -> {
-                var ps = conn.prepareStatement("INSERT INTO LOJA (NOME, DATA_CRIACAO) VALUES (?, ?)", new String[]{"ID"});
+                var ps = conn.prepareStatement("INSERT INTO LOJA (NOME, CNPJ, DATA_CRIACAO) VALUES (?, ?, ?)", new String[]{"id"});
                 ps.setString(1, "Loja Teste Weekly");
-                ps.setDate(2, java.sql.Date.valueOf(LocalDate.now()));
+                ps.setString(2, String.format("00.000.000/0001-%02d", (int)(System.nanoTime() % 100)));
+                ps.setDate(3, java.sql.Date.valueOf(LocalDate.now()));
                 return ps;
             }, keyHolder);
             lojaId = keyHolder.getKey().longValue();
@@ -68,18 +69,18 @@ public class PedidoWeeklyAverageIntegrationTest {
         LocalDate wed = LocalDate.of(2025, 1, 1);    // Wednesday
 
         // Monday: 100 + 200 = avg 150
-        jdbcTemplate.update("INSERT INTO PEDIDO (DATA_PEDIDO, STATUS, TOTAL, METODO_PAGAMENTO, LOJA_ID, CLIENTE_ID) VALUES (?, ?, ?, ?, ?, ?)",
-                java.sql.Timestamp.valueOf(LocalDateTime.of(mon1, LocalTime.NOON)), "OK", 100.0, "CARD", lojaId, null);
-        jdbcTemplate.update("INSERT INTO PEDIDO (DATA_PEDIDO, STATUS, TOTAL, METODO_PAGAMENTO, LOJA_ID, CLIENTE_ID) VALUES (?, ?, ?, ?, ?, ?)",
-                java.sql.Timestamp.valueOf(LocalDateTime.of(mon2, LocalTime.NOON)), "OK", 200.0, "CARD", lojaId, null);
+                jdbcTemplate.update("INSERT INTO PEDIDO (NUMERO_PEDIDO, DATA_PEDIDO, STATUS, valor_total, METODO_PAGAMENTO, LOJA_ID, CLIENTE_ID) VALUES (?, ?, ?, ?, ?, ?, ?)",
+                    "NP-" + System.nanoTime(), java.sql.Timestamp.valueOf(LocalDateTime.of(mon1, LocalTime.NOON)), "OK", 100.0, "CARD", lojaId, null);
+            jdbcTemplate.update("INSERT INTO PEDIDO (NUMERO_PEDIDO, DATA_PEDIDO, STATUS, valor_total, METODO_PAGAMENTO, LOJA_ID, CLIENTE_ID) VALUES (?, ?, ?, ?, ?, ?, ?)",
+                "NP-" + System.nanoTime(), java.sql.Timestamp.valueOf(LocalDateTime.of(mon2, LocalTime.NOON)), "OK", 200.0, "CARD", lojaId, null);
 
         // Tuesday: 300
-        jdbcTemplate.update("INSERT INTO PEDIDO (DATA_PEDIDO, STATUS, TOTAL, METODO_PAGAMENTO, LOJA_ID, CLIENTE_ID) VALUES (?, ?, ?, ?, ?, ?)",
-                java.sql.Timestamp.valueOf(LocalDateTime.of(tue, LocalTime.NOON)), "OK", 300.0, "CARD", lojaId, null);
+        jdbcTemplate.update("INSERT INTO PEDIDO (NUMERO_PEDIDO, DATA_PEDIDO, STATUS, valor_total, METODO_PAGAMENTO, LOJA_ID, CLIENTE_ID) VALUES (?, ?, ?, ?, ?, ?, ?)",
+            "NP-" + System.nanoTime(), java.sql.Timestamp.valueOf(LocalDateTime.of(tue, LocalTime.NOON)), "OK", 300.0, "CARD", lojaId, null);
 
         // Wednesday: 400
-        jdbcTemplate.update("INSERT INTO PEDIDO (DATA_PEDIDO, STATUS, TOTAL, METODO_PAGAMENTO, LOJA_ID, CLIENTE_ID) VALUES (?, ?, ?, ?, ?, ?)",
-                java.sql.Timestamp.valueOf(LocalDateTime.of(wed, LocalTime.NOON)), "OK", 400.0, "CARD", lojaId, null);
+        jdbcTemplate.update("INSERT INTO PEDIDO (NUMERO_PEDIDO, DATA_PEDIDO, STATUS, valor_total, METODO_PAGAMENTO, LOJA_ID, CLIENTE_ID) VALUES (?, ?, ?, ?, ?, ?, ?)",
+            "NP-" + System.nanoTime(), java.sql.Timestamp.valueOf(LocalDateTime.of(wed, LocalTime.NOON)), "OK", 400.0, "CARD", lojaId, null);
 
         String url = "http://localhost:" + port + "/pedidos/" + lojaId + "/reports/weekly-average?start=2025-01-01&end=2025-01-31&zoneId=UTC";
         
@@ -139,9 +140,10 @@ public class PedidoWeeklyAverageIntegrationTest {
         } else {
             var keyHolder = new org.springframework.jdbc.support.GeneratedKeyHolder();
             jdbcTemplate.update(conn -> {
-                var ps = conn.prepareStatement("INSERT INTO LOJA (NOME, DATA_CRIACAO) VALUES (?, ?)", new String[]{"ID"});
+                var ps = conn.prepareStatement("INSERT INTO LOJA (NOME, CNPJ, DATA_CRIACAO) VALUES (?, ?, ?)", new String[]{"id"});
                 ps.setString(1, "Loja Empty");
-                ps.setDate(2, java.sql.Date.valueOf(LocalDate.now()));
+                ps.setString(2, String.format("00.000.000/0001-%02d", (int)(System.nanoTime() % 100)));
+                ps.setDate(3, java.sql.Date.valueOf(LocalDate.now()));
                 return ps;
             }, keyHolder);
             lojaId = keyHolder.getKey().longValue();

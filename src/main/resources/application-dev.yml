@@ -1,50 +1,24 @@
 spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/sinatra_dev
-    username: ${DB_USER:sinatra_user}
+    username: sinatra_user
     password: ${DB_PASSWORD:dev_password}
-    driver-class-name: org.postgresql.Driver
-    hikari:
-      maximum-pool-size: 10
-      minimum-idle: 2
-      connection-timeout: 20000
-      idle-timeout: 300000
-      max-lifetime: 1200000
-
   jpa:
     hibernate:
-      ddl-auto: validate  # Flyway gerencia o schema
+      ddl-auto: validate
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
-        format_sql: true
-        jdbc:
-          batch_size: 20
-        order_inserts: true
-        order_updates: true
-    show-sql: true
 
-  flyway:
-    enabled: true
-    baseline-on-migrate: true
-    locations: classpath:db/migration
-    validate-on-migrate: true
+  redis:
+    host: localhost
+    port: 6379
 
-  data:
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,metrics,prometheus
+  health:
     redis:
-      host: ${REDIS_HOST:localhost}
-      port: ${REDIS_PORT:6379}
-      password: ${REDIS_PASSWORD:dev_redis_password}
-      timeout: 2000ms
-      lettuce:
-        pool:
-          max-active: 8
-          max-idle: 8
-          min-idle: 2
-
-logging:
-  level:
-    pro.sinatra.mini: DEBUG
-    org.hibernate.SQL: DEBUG
-    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
-    org.springframework.jdbc.core: DEBUG
+      enabled: true

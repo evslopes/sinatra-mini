@@ -170,11 +170,12 @@ public class PedidoCrudIntegrationTest {
             var keyHolder = new org.springframework.jdbc.support.GeneratedKeyHolder();
             jdbcTemplate.update(conn -> {
                 var ps = conn.prepareStatement(
-                        "INSERT INTO LOJA (NOME, DATA_CRIACAO) VALUES (?, ?)", 
-                        new String[]{"ID"}
+                        "INSERT INTO LOJA (NOME, CNPJ, DATA_CRIACAO) VALUES (?, ?, ?)", 
+                        new String[]{"id"}
                 );
                 ps.setString(1, "Loja Teste CRUD");
-                ps.setDate(2, java.sql.Date.valueOf(LocalDate.now()));
+                ps.setString(2, String.format("00.000.000/0001-%02d", (int)(System.nanoTime() % 100)));
+                ps.setDate(3, java.sql.Date.valueOf(LocalDate.now()));
                 return ps;
             }, keyHolder);
             return keyHolder.getKey().longValue();
@@ -185,11 +186,12 @@ public class PedidoCrudIntegrationTest {
         var keyHolder = new org.springframework.jdbc.support.GeneratedKeyHolder();
         jdbcTemplate.update(conn -> {
             var ps = conn.prepareStatement(
-                    "INSERT INTO LOJA (NOME, DATA_CRIACAO) VALUES (?, ?)", 
-                    new String[]{"ID"}
+                "INSERT INTO LOJA (NOME, CNPJ, DATA_CRIACAO) VALUES (?, ?, ?)", 
+                new String[]{"id"}
             );
             ps.setString(1, "Loja Teste CRUD 2");
-            ps.setDate(2, java.sql.Date.valueOf(LocalDate.now()));
+            ps.setString(2, String.format("00.000.000/0001-%02d", (int)(System.nanoTime() % 100)));
+            ps.setDate(3, java.sql.Date.valueOf(LocalDate.now()));
             return ps;
         }, keyHolder);
         return keyHolder.getKey().longValue();
@@ -198,16 +200,17 @@ public class PedidoCrudIntegrationTest {
     private Long insertPedido(Long lojaId, double total) {
         var keyHolder = new org.springframework.jdbc.support.GeneratedKeyHolder();
         jdbcTemplate.update(conn -> {
-            var ps = conn.prepareStatement(
-                    "INSERT INTO PEDIDO (DATA_PEDIDO, STATUS, TOTAL, METODO_PAGAMENTO, LOJA_ID, CLIENTE_ID) VALUES (?, ?, ?, ?, ?, ?)",
-                    new String[]{"ID"}
-            );
-            ps.setTimestamp(1, java.sql.Timestamp.valueOf(LocalDateTime.now()));
-            ps.setString(2, "PENDENTE");
-            ps.setDouble(3, total);
-            ps.setString(4, "CARD");
-            ps.setLong(5, lojaId);
-            ps.setObject(6, null);
+                var ps = conn.prepareStatement(
+                    "INSERT INTO PEDIDO (NUMERO_PEDIDO, DATA_PEDIDO, STATUS, valor_total, METODO_PAGAMENTO, LOJA_ID, CLIENTE_ID) VALUES (?, ?, ?, ?, ?, ?, ?)",
+                    new String[]{"id"}
+                );
+                ps.setString(1, "NP-" + System.nanoTime());
+                ps.setTimestamp(2, java.sql.Timestamp.valueOf(LocalDateTime.now()));
+                ps.setString(3, "PENDENTE");
+                ps.setDouble(4, total);
+                ps.setString(5, "CARD");
+                ps.setLong(6, lojaId);
+                ps.setObject(7, null);
             return ps;
         }, keyHolder);
         return keyHolder.getKey().longValue();
