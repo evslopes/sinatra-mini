@@ -1,7 +1,7 @@
 # Java / Maven / Spring standard ignores
 
 # Build output
-/target/
+target/
 
 # Maven wrapper
 /.mvn/
@@ -48,6 +48,18 @@ temp/
 # Spring Boot
 spring.log
 hs_err_pid*
+
+# Environment variables (segurança)
+.env
+.env.local
+.env.*.local
+
+# Flyway config with credentials (usar flyway.conf.example)
+flyway.conf
+
+# Database local
+*.db
+*.sqlite
 
 # H2 database files
 *.h2.db
