@@ -11,6 +11,7 @@
 /home/jhhdev/Projetos/sinatra-mini/src/test/java/pro/sinatra/mini/service/MaiorIntervaloSemVendasServiceTest.java
 /home/jhhdev/Projetos/sinatra-mini/src/test/java/pro/sinatra/mini/controller/PedidoControllerErrorTest.java
 /home/jhhdev/Projetos/sinatra-mini/src/test/java/pro/sinatra/mini/service/MediaSemanalServiceTest.java
+/home/jhhdev/Projetos/sinatra-mini/src/test/java/pro/sinatra/mini/cache/ReportCacheIntegrationTest.java
 /home/jhhdev/Projetos/sinatra-mini/src/test/java/pro/sinatra/mini/integration/PedidoWeeklyAverageIntegrationTest.java
 /home/jhhdev/Projetos/sinatra-mini/src/test/java/pro/sinatra/mini/integration/PedidoLongestNoSalesIntegrationTest.java
 /home/jhhdev/Projetos/sinatra-mini/src/test/java/pro/sinatra/mini/validation/PedidoValidationTest.java

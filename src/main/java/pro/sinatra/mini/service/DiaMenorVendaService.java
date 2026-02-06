@@ -1,6 +1,7 @@
 package pro.sinatra.mini.service;
 
 import org.springframework.stereotype.Service;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.transaction.annotation.Transactional;
 import pro.sinatra.mini.repository.PedidoRepository;
 import pro.sinatra.mini.reports.MenorVendaDiaDTO;
@@ -21,6 +22,7 @@ public class DiaMenorVendaService {
     }
 
     @Transactional(readOnly = true)
+    @Cacheable(value = "diaMenorVenda", key = "#lojaId + '-' + #start + '-' + #end + '-' + #zone")
     public Optional<MenorVendaDiaDTO> calcularDiaMenorVenda(Long lojaId, LocalDate start, LocalDate end, ZoneId zone) {
         Objects.requireNonNull(lojaId, "lojaId must not be null");
         ZoneId targetZone = (zone == null) ? ZoneId.of("UTC") : zone;

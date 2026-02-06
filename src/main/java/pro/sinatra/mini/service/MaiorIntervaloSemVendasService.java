@@ -1,6 +1,7 @@
 package pro.sinatra.mini.service;
 
 import org.springframework.stereotype.Service;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.transaction.annotation.Transactional;
 import pro.sinatra.mini.repository.PedidoRepository;
 import pro.sinatra.mini.reports.PeriodoDTO;
@@ -22,6 +23,7 @@ public class MaiorIntervaloSemVendasService {
     }
 
     @Transactional(readOnly = true)
+    @Cacheable(value = "maiorIntervalo", key = "#lojaId + '-' + #inicio + '-' + #fim")
     public PeriodoDTO calcularMaiorIntervalo(Long lojaId, LocalDate inicio, LocalDate fim) {
         Objects.requireNonNull(lojaId, "lojaId must not be null");
 

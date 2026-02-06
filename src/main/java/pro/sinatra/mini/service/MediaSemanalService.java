@@ -1,6 +1,7 @@
 package pro.sinatra.mini.service;
 
 import org.springframework.stereotype.Service;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.transaction.annotation.Transactional;
 import pro.sinatra.mini.repository.PedidoRepository;
 import pro.sinatra.mini.reports.MediaSemanalDTO;
@@ -21,6 +22,7 @@ public class MediaSemanalService {
     }
 
     @Transactional(readOnly = true)
+    @Cacheable(value = "mediaSemanal", key = "#lojaId + '-' + #start + '-' + #end + '-' + #zone")
     public List<MediaSemanalDTO> calcularMediaSemanal(Long lojaId, LocalDate start, LocalDate end, ZoneId zone) {
         ZoneId targetZone = (zone == null) ? ZoneId.of("UTC") : zone;
 
