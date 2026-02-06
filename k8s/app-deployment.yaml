@@ -93,12 +93,12 @@ spec:
           failureThreshold: 3
         startupProbe:
           httpGet:
-            path: /actuator/health
+            path: /actuator/health/readiness
             port: 8080
-          initialDelaySeconds: 0
+          initialDelaySeconds: 30
           periodSeconds: 10
-          timeoutSeconds: 3
-          failureThreshold: 12 # 120s total (12 * 10s)
+          timeoutSeconds: 10
+          failureThreshold: 12 # ~150s total (initialDelay 30s + 12 * 10s)
 
 ---
 # Sinatra App Service

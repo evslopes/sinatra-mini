@@ -2,13 +2,13 @@ package pro.sinatra.mini.config;
 
 import org.flywaydb.core.Flyway;
 import javax.sql.DataSource;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.event.EventListener;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 
 @Configuration
+@ConditionalOnProperty(name = "sinatra.manual-flyway.enabled", havingValue = "true", matchIfMissing = false)
 public class ManualFlywayConfig {
     private final DataSource dataSource;
 

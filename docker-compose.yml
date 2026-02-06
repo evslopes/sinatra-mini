@@ -16,7 +16,11 @@ services:
       SPRING_REDIS_HOST: redis
       SPRING_REDIS_PASSWORD: ${REDIS_PASSWORD:-dev_redis_password}
       SPRING_REDIS_PORT: 6379
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      SPRING_JPA_HIBERNATE_DDL_AUTO: none
       SPRING_JPA_DEFER_DATASOURCE_INITIALIZATION: "true"
+      SPRING_FLYWAY_ENABLED: "false"
       JAVA_OPTS: "-Xms512m -Xmx1024m"
     ports:
       - "8080:8080"

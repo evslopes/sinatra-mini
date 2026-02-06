@@ -13,7 +13,7 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: validate  # Flyway gerencia o schema
+      ddl-auto: none  # DEV: usar Flyway para gerenciar schema; desabilitado para Option A
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect

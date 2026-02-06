@@ -1,8 +1,8 @@
 -- Active: 1766171539795@@127.0.0.1@5432
 -- Populate Loja table
-INSERT INTO loja (id, nome, data_criacao) VALUES
-(1, 'Loja A', '2023-01-01'),
-(2, 'Loja B', '2023-02-01');
+INSERT INTO loja (id, nome, cnpj, data_criacao) VALUES
+(1, 'Loja A', '00.000.000/0001-01', '2023-01-01'),
+(2, 'Loja B', '00.000.000/0001-02', '2023-02-01');
 
 -- Populate Cliente table
 INSERT INTO cliente (id, nome, email, loja_id) VALUES

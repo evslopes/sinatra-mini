@@ -200,11 +200,12 @@ public class PedidoControllerErrorTest {
             var keyHolder = new org.springframework.jdbc.support.GeneratedKeyHolder();
             jdbcTemplate.update(conn -> {
                 var ps = conn.prepareStatement(
-                        "INSERT INTO LOJA (NOME, DATA_CRIACAO) VALUES (?, ?)", 
-                        new String[]{"ID"}
+                        "INSERT INTO LOJA (NOME, CNPJ, DATA_CRIACAO) VALUES (?, ?, ?)", 
+                        new String[]{"id"}
                 );
                 ps.setString(1, "Loja Teste Errors");
-                ps.setDate(2, java.sql.Date.valueOf(java.time.LocalDate.now()));
+                ps.setString(2, String.format("00.000.000/0001-%02d", (int)(System.nanoTime() % 100)));
+                ps.setDate(3, java.sql.Date.valueOf(java.time.LocalDate.now()));
                 return ps;
             }, keyHolder);
             return keyHolder.getKey().longValue();

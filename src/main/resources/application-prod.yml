@@ -13,6 +13,7 @@ spring:
       leak-detection-threshold: 60000
 
   jpa:
+    defer-datasource-initialization: true
     hibernate:
       ddl-auto: validate  # NUNCA 'update' ou 'create' em prod
     properties:
@@ -32,6 +33,10 @@ spring:
     locations: classpath:db/migration
     validate-on-migrate: true
     out-of-order: false
+
+sinatra:
+  manual-flyway:
+    enabled: true
 
   data:
     redis:
