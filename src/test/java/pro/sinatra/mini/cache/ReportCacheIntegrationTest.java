@@ -32,6 +32,9 @@ public class ReportCacheIntegrationTest {
     @MockBean
     private PedidoRepository pedidoRepository;
 
+    @Autowired
+    private org.springframework.cache.CacheManager cacheManager;
+
     @Test
     public void testCalcularMaiorIntervalo_IsCached() {
         Long lojaId = 10L;
@@ -52,5 +55,13 @@ public class ReportCacheIntegrationTest {
         assertEquals(first, second);
 
         verify(pedidoRepository, times(1)).streamDistinctSaleDaysByLoja(lojaId, start, end);
+
+        // Validate Caffeine stats for report cache: 2 requests, 1 miss
+        var cache = (org.springframework.cache.caffeine.CaffeineCache) cacheManager.getCache("maiorIntervalo");
+        assertNotNull(cache, "maiorIntervalo cache should exist");
+        com.github.benmanes.caffeine.cache.Cache<?, ?> nativeCache = (com.github.benmanes.caffeine.cache.Cache<?, ?>) cache.getNativeCache();
+        var stats = nativeCache.stats();
+        assertEquals(2L, stats.requestCount(), "expected 2 cache requests");
+        assertEquals(1L, stats.missCount(), "expected 1 cache miss");
     }
 }

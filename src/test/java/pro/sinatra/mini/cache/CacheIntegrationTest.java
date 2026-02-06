@@ -15,6 +15,9 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.CacheManager;
+import org.springframework.cache.caffeine.CaffeineCache;
 import static org.mockito.Mockito.*;
 
 @SpringBootTest(
@@ -40,6 +43,9 @@ public class CacheIntegrationTest {
 
     @MockBean
     private PedidoRepository pedidoRepository;
+
+    @Autowired
+    private CacheManager cacheManager;
 
     @Test
     public void testLojaFindById_IsCached() {
@@ -83,5 +89,13 @@ public class CacheIntegrationTest {
         assertEquals(first, second);
 
         verify(pedidoRepository, times(1)).streamDailySalesByLoja(lojaId);
+
+        // Validate Caffeine stats: 2 requests, 1 miss
+        CaffeineCache cache = (CaffeineCache) cacheManager.getCache("relatorios");
+        assertNotNull(cache, "relatorios cache should exist");
+        com.github.benmanes.caffeine.cache.Cache<?, ?> nativeCache = (com.github.benmanes.caffeine.cache.Cache<?, ?>) cache.getNativeCache();
+        var stats = nativeCache.stats();
+        assertEquals(2L, stats.requestCount(), "expected 2 cache requests");
+        assertEquals(1L, stats.missCount(), "expected 1 cache miss");
     }
 }
