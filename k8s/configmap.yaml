@@ -1,0 +1,24 @@
+# ConfigMap para configurações não sensíveis
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: sinatra-app-config
+  namespace: sinatra-mini
+data:
+  SPRING_PROFILES_ACTIVE: "prod"
+  SPRING_DATASOURCE_URL: "jdbc:postgresql://postgres-service:5432/sinatra_prod"
+  SPRING_DATASOURCE_USERNAME: "sinatra_user"
+  SPRING_REDIS_HOST: "redis-service"
+  SPRING_REDIS_PORT: "6379"
+  JAVA_OPTS: "-Xms512m -Xmx2048m -XX:+UseContainerSupport -XX:MaxRAMPercentage=75.0"
+  
+---
+# ConfigMap para PostgreSQL
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: postgres-config
+  namespace: sinatra-mini
+data:
+  POSTGRES_DB: "sinatra_prod"
+  POSTGRES_USER: "sinatra_user"
