@@ -358,7 +358,7 @@ curl -u admin:${GRAFANA_PASSWORD} http://localhost:3000/api/dashboards/home | jq
 
 ### Sprint 1 (v1.1.0) - Story 1.1.3: Testes PostgreSQL
 
-**Issue GitHub:** [#18](https://github.com/jhhdev/sinatra-mini/issues/18)
+**Issue GitHub:** [#18](https://github.com/evslopes/sinatra-mini/issues/18)
 
 **Responsável:** QA Agent
 
@@ -447,8 +447,8 @@ gh pr create --title "test: PostgreSQL compatibility tests #18" --body "Closes #
 
 ## 8. Referências
 
-- [ROADMAP-ARQUITETURA.md](documentacao/evolucao-arquitetura/ROADMAP-ARQUITETURA.md) - Roadmap completo
-- [agile-agents.md](.github/agents/agile-agents.md) - Backlog e critérios de aceite
-- [engineer-agents.md](.github/agents/engineer-agents.md) - Padrões de código
-- [devops-agents.md](.github/agents/devops-agents.md) - Infraestrutura e deploy
+- [ROADMAP-ARQUITETURA.md](../../documentacao/evolucao-arquitetura/ROADMAP-ARQUITETURA.md) - Roadmap completo
+- [agile-agents.md](./agile-agents.md) - Backlog e critérios de aceite
+- [engineer-agents.md](./engineer-agents.md) - Padrões de código
+- [devops-agents.md](./devops-agents.md) - Infraestrutura e deploy
 - [TestContainers Documentation](https://www.testcontainers.org/) - Referência de testes com containers

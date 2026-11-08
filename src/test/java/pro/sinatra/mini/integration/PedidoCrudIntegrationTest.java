@@ -174,7 +174,7 @@ public class PedidoCrudIntegrationTest {
                         new String[]{"id"}
                 );
                 ps.setString(1, "Loja Teste CRUD");
-                ps.setString(2, String.format("00.000.000/0001-%02d", (int)(System.nanoTime() % 100)));
+                ps.setString(2, pro.sinatra.mini.test.TestIdentifiers.nextCnpj());
                 ps.setDate(3, java.sql.Date.valueOf(LocalDate.now()));
                 return ps;
             }, keyHolder);
@@ -190,7 +190,7 @@ public class PedidoCrudIntegrationTest {
                 new String[]{"id"}
             );
             ps.setString(1, "Loja Teste CRUD 2");
-            ps.setString(2, String.format("00.000.000/0001-%02d", (int)(System.nanoTime() % 100)));
+            ps.setString(2, pro.sinatra.mini.test.TestIdentifiers.nextCnpj());
             ps.setDate(3, java.sql.Date.valueOf(LocalDate.now()));
             return ps;
         }, keyHolder);
@@ -204,7 +204,7 @@ public class PedidoCrudIntegrationTest {
                     "INSERT INTO PEDIDO (NUMERO_PEDIDO, DATA_PEDIDO, STATUS, valor_total, METODO_PAGAMENTO, LOJA_ID, CLIENTE_ID) VALUES (?, ?, ?, ?, ?, ?, ?)",
                     new String[]{"id"}
                 );
-                ps.setString(1, "NP-" + System.nanoTime());
+                ps.setString(1, pro.sinatra.mini.test.TestIdentifiers.nextNumeroPedido());
                 ps.setTimestamp(2, java.sql.Timestamp.valueOf(LocalDateTime.now()));
                 ps.setString(3, "PENDENTE");
                 ps.setDouble(4, total);

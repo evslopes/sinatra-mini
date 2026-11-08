@@ -92,10 +92,10 @@ Para cada Story, o Agente Agile deve solicitar ao Engineer:
 
 | Agente | Papel | Arquivo | Responsabilidades |
 |--------|-------|---------|-------------------|
-| **Agile** | Product Owner | [agile-agents.md](.github/agents/agile-agents.md) | Backlog, priorização, stories, critérios de aceite |
-| **Engineer** | Developer | [engineer-agents.md](.github/agents/engineer-agents.md) | Código, arquitetura, padrões, performance |
-| **DevOps** | SRE/Infra | [devops-agents.md](.github/agents/devops-agents.md) | CI/CD, infraestrutura, deploy, monitoramento |
-| **QA** | Quality Assurance | [qa-agents.md](.github/agents/qa-agents.md) | Testes, validação, performance, carga |
+| **Agile** | Product Owner | [agile-agents.md](./agile-agents.md) | Backlog, priorização, stories, critérios de aceite |
+| **Engineer** | Developer | [engineer-agents.md](./engineer-agents.md) | Código, arquitetura, padrões, performance |
+| **DevOps** | SRE/Infra | [devops-agents.md](./devops-agents.md) | CI/CD, infraestrutura, deploy, monitoramento |
+| **QA** | Quality Assurance | [qa-agents.md](./qa-agents.md) | Testes, validação, performance, carga |
 
 ## 4. Definition of Done (DoD)
 
@@ -105,7 +105,7 @@ Para considerar uma Story como **DONE**, os seguintes critérios devem ser atend
 - [ ] **Compilação**: `./mvnw clean install` executado com sucesso
 - [ ] **Testes**: Todos os testes (unitários + integração) passando
 - [ ] **Cobertura**: Mínimo 80% de code coverage para novos códigos
-- [ ] **Padrões**: Código segue [copilot-instructions.md](.github/copilot-instructions.md)
+- [ ] **Padrões**: Código segue [copilot-instructions.md](../copilot-instructions.md)
 - [ ] **Review**: Aprovação de pelo menos 1 reviewer (Engineer ou Senior)
 
 ### Performance
@@ -222,11 +222,11 @@ gh issue view 16
 ### Sprint 1 (Semana 1-2 de Fev/2026)
 
 1. **Agile Agent**: ✅ Issues criadas no GitHub
-   - [#15](https://github.com/jhhdev/sinatra-mini/issues/15): Épico 1 - PostgreSQL
-   - [#16](https://github.com/jhhdev/sinatra-mini/issues/16): Story 1.1.1 - Setup PostgreSQL
-   - [#17](https://github.com/jhhdev/sinatra-mini/issues/17): Story 1.1.2 - Flyway
-   - [#18](https://github.com/jhhdev/sinatra-mini/issues/18): Story 1.1.3 - Testes
-   - [#19](https://github.com/jhhdev/sinatra-mini/issues/19): Story 1.1.4 - Backup
+   - [#15](https://github.com/evslopes/sinatra-mini/issues/15): Épico 1 - PostgreSQL
+   - [#16](https://github.com/evslopes/sinatra-mini/issues/16): Story 1.1.1 - Setup PostgreSQL
+   - [#17](https://github.com/evslopes/sinatra-mini/issues/17): Story 1.1.2 - Flyway
+   - [#18](https://github.com/evslopes/sinatra-mini/issues/18): Story 1.1.3 - Testes
+   - [#19](https://github.com/evslopes/sinatra-mini/issues/19): Story 1.1.4 - Backup
 
 2. **DevOps Agent**: Iniciar Story 1.1.1 (#16)
    ```bash
@@ -249,7 +249,7 @@ gh issue view 16
 
 ## 10. Referências
 
-- [ROADMAP-ARQUITETURA.md](documentacao/evolucao-arquitetura/ROADMAP-ARQUITETURA.md) - Roadmap completo com detalhes técnicos
-- [copilot-instructions.md](.github/copilot-instructions.md) - Instruções gerais do projeto
-- [engineer-agents.md](.github/agents/engineer-agents.md) - Padrões de implementação
-- [CHANGELOG.md](CHANGELOG.md) - Histórico de versões
+- [ROADMAP-ARQUITETURA.md](../../documentacao/evolucao-arquitetura/ROADMAP-ARQUITETURA.md) - Roadmap completo com detalhes técnicos
+- [copilot-instructions.md](../copilot-instructions.md) - Instruções gerais do projeto
+- [engineer-agents.md](./engineer-agents.md) - Padrões de implementação
+- [CHANGELOG.md](../../CHANGELOG.md) - Histórico de versões

@@ -204,7 +204,7 @@ public class PedidoControllerErrorTest {
                         new String[]{"id"}
                 );
                 ps.setString(1, "Loja Teste Errors");
-                ps.setString(2, String.format("00.000.000/0001-%02d", (int)(System.nanoTime() % 100)));
+                ps.setString(2, pro.sinatra.mini.test.TestIdentifiers.nextCnpj());
                 ps.setDate(3, java.sql.Date.valueOf(java.time.LocalDate.now()));
                 return ps;
             }, keyHolder);

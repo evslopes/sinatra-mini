@@ -121,9 +121,9 @@ gh pr merge 10 --squash
 
 ### 4.1 Épico 1: PostgreSQL Setup (v1.1.0)
 
-**Issue GitHub:** [#15](https://github.com/jhhdev/sinatra-mini/issues/15)  
+**Issue GitHub:** [#15](https://github.com/evslopes/sinatra-mini/issues/15)  
 **Responsável:** DevOps Agent  
-**Stories:** [#16](https://github.com/jhhdev/sinatra-mini/issues/16), [#19](https://github.com/jhhdev/sinatra-mini/issues/19)
+**Stories:** [#16](https://github.com/evslopes/sinatra-mini/issues/16), [#19](https://github.com/evslopes/sinatra-mini/issues/19)
 
 #### Story 1.1.1: Setup PostgreSQL e Configuração de Ambientes
 
@@ -269,7 +269,7 @@ gunzip < /tmp/sinatra_backup_20260121_030000.sql.gz | \
 
 ### 4.2 Épico 2: Cache Distribuído - Redis (v1.1.0)
 
-**Issue GitHub:** [#24](https://github.com/jhhdev/sinatra-mini/issues/24)  
+**Issue GitHub:** [#24](https://github.com/evslopes/sinatra-mini/issues/24)  
 **Responsável:** DevOps Agent (setup) + Engineer Agent (integração)
 
 #### Redis Setup (Docker)
@@ -327,7 +327,7 @@ docker exec -it sinatra_redis_master redis-cli --pass ${REDIS_PASSWORD} FLUSHALL
 
 ### 4.3 Épico 3: Alta Disponibilidade (v1.2.0)
 
-**Issue GitHub:** [#26](https://github.com/jhhdev/sinatra-mini/issues/26)  
+**Issue GitHub:** [#26](https://github.com/evslopes/sinatra-mini/issues/26)  
 **Responsável:** DevOps Agent
 
 #### Story 1.2.1: Load Balancer (Nginx)
@@ -415,7 +415,7 @@ services:
 
 ### 4.4 Épico 4: Observabilidade (v1.2.0)
 
-**Issue GitHub:** [#30](https://github.com/jhhdev/sinatra-mini/issues/30)  
+**Issue GitHub:** [#30](https://github.com/evslopes/sinatra-mini/issues/30)  
 **Responsável:** DevOps Agent
 
 #### Story 1.2.3: Stack de Observabilidade
@@ -600,8 +600,8 @@ jobs:
 
 ## 7. Referências
 
-- [ROADMAP-ARQUITETURA.md](documentacao/evolucao-arquitetura/ROADMAP-ARQUITETURA.md) - Roadmap completo
-- [agile-agents.md](.github/agents/agile-agents.md) - Backlog e priorização
-- [engineer-agents.md](.github/agents/engineer-agents.md) - Padrões de código
+- [ROADMAP-ARQUITETURA.md](../../documentacao/evolucao-arquitetura/ROADMAP-ARQUITETURA.md) - Roadmap completo
+- [agile-agents.md](./agile-agents.md) - Backlog e priorização
+- [engineer-agents.md](./engineer-agents.md) - Padrões de código
 - [Docker Documentation](https://docs.docker.com/) - Referência de containers
 - [PostgreSQL Documentation](https://www.postgresql.org/docs/) - Referência de banco de dados

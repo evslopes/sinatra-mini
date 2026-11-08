@@ -51,7 +51,7 @@ public class PedidoMinDaySalesIntegrationTest {
             jdbcTemplate.update(conn -> {
                     var ps = conn.prepareStatement("INSERT INTO LOJA (NOME, CNPJ, DATA_CRIACAO) VALUES (?, ?, ?)", new String[]{"id"});
                 ps.setString(1, "Loja Teste");
-                    ps.setString(2, String.format("00.000.000/0001-%02d", (int)(System.nanoTime() % 100)));
+                    ps.setString(2, pro.sinatra.mini.test.TestIdentifiers.nextCnpj());
                     ps.setDate(3, java.sql.Date.valueOf(LocalDate.now()));
                 return ps;
             }, keyHolder);
@@ -65,17 +65,17 @@ public class PedidoMinDaySalesIntegrationTest {
 
         // day1: one order 100
         jdbcTemplate.update("INSERT INTO PEDIDO (NUMERO_PEDIDO, DATA_PEDIDO, STATUS, valor_total, METODO_PAGAMENTO, LOJA_ID, CLIENTE_ID) VALUES (?, ?, ?, ?, ?, ?, ?)",
-            "NP-" + System.nanoTime(), java.sql.Timestamp.valueOf(LocalDateTime.of(d1, LocalTime.NOON)), "OK", 100.0, "CARD", lojaId, null);
+            pro.sinatra.mini.test.TestIdentifiers.nextNumeroPedido(), java.sql.Timestamp.valueOf(LocalDateTime.of(d1, LocalTime.NOON)), "OK", 100.0, "CARD", lojaId, null);
 
         // day2: two orders 50 and 20 = 70
         jdbcTemplate.update("INSERT INTO PEDIDO (NUMERO_PEDIDO, DATA_PEDIDO, STATUS, valor_total, METODO_PAGAMENTO, LOJA_ID, CLIENTE_ID) VALUES (?, ?, ?, ?, ?, ?, ?)",
-            "NP-" + System.nanoTime(), java.sql.Timestamp.valueOf(LocalDateTime.of(d2, LocalTime.NOON)), "OK", 50.0, "CARD", lojaId, null);
+            pro.sinatra.mini.test.TestIdentifiers.nextNumeroPedido(), java.sql.Timestamp.valueOf(LocalDateTime.of(d2, LocalTime.NOON)), "OK", 50.0, "CARD", lojaId, null);
         jdbcTemplate.update("INSERT INTO PEDIDO (NUMERO_PEDIDO, DATA_PEDIDO, STATUS, valor_total, METODO_PAGAMENTO, LOJA_ID, CLIENTE_ID) VALUES (?, ?, ?, ?, ?, ?, ?)",
-            "NP-" + System.nanoTime(), java.sql.Timestamp.valueOf(LocalDateTime.of(d2, LocalTime.NOON.plusHours(3))), "OK", 20.0, "CARD", lojaId, null);
+            pro.sinatra.mini.test.TestIdentifiers.nextNumeroPedido(), java.sql.Timestamp.valueOf(LocalDateTime.of(d2, LocalTime.NOON.plusHours(3))), "OK", 20.0, "CARD", lojaId, null);
 
         // day3: one order 200
         jdbcTemplate.update("INSERT INTO PEDIDO (NUMERO_PEDIDO, DATA_PEDIDO, STATUS, valor_total, METODO_PAGAMENTO, LOJA_ID, CLIENTE_ID) VALUES (?, ?, ?, ?, ?, ?, ?)",
-            "NP-" + System.nanoTime(), java.sql.Timestamp.valueOf(LocalDateTime.of(d3, LocalTime.NOON)), "OK", 200.0, "CARD", lojaId, null);
+            pro.sinatra.mini.test.TestIdentifiers.nextNumeroPedido(), java.sql.Timestamp.valueOf(LocalDateTime.of(d3, LocalTime.NOON)), "OK", 200.0, "CARD", lojaId, null);
 
         String url = "http://localhost:" + port + "/pedidos/" + lojaId + "/reports/min-day-sales?start=2025-01-01&end=2025-01-03&zoneId=UTC";
         ResponseEntity<MenorVendaDiaDTO> resp = restTemplate.getForEntity(url, MenorVendaDiaDTO.class);

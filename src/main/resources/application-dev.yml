@@ -22,3 +22,8 @@ management:
   health:
     redis:
       enabled: true
+
+sinatra:
+  cache:
+    redis:
+      enabled: true

@@ -46,7 +46,7 @@ public class PedidoLoadPerformanceTest {
             jdbcTemplate.update(con -> {
                 java.sql.PreparedStatement ps = con.prepareStatement("INSERT INTO LOJA (NOME, CNPJ, DATA_CRIACAO) VALUES (?, ?, ?)", new String[]{"id"});
                 ps.setString(1, "Loja Perf");
-                ps.setString(2, String.format("00.000.000/0001-%02d", (int)(System.nanoTime() % 100)));
+                ps.setString(2, pro.sinatra.mini.test.TestIdentifiers.nextCnpj());
                 ps.setDate(3, java.sql.Date.valueOf(java.time.LocalDate.now()));
                 return ps;
             }, kh);
@@ -61,7 +61,7 @@ public class PedidoLoadPerformanceTest {
         for (int i = 1; i <= total; i++) {
             java.time.LocalDateTime dt = java.time.LocalDateTime.now().plusMinutes(i);
             double value = 10.0 + (i % 100);
-            batch.add(new Object[]{"NP-" + System.nanoTime(), java.sql.Timestamp.valueOf(dt), "OK", value, "CARD", lojaId, null});
+            batch.add(new Object[]{pro.sinatra.mini.test.TestIdentifiers.nextNumeroPedido(), java.sql.Timestamp.valueOf(dt), "OK", value, "CARD", lojaId, null});
             if (batch.size() >= batchSize) {
                 jdbcTemplate.batchUpdate("INSERT INTO PEDIDO (NUMERO_PEDIDO, DATA_PEDIDO, STATUS, valor_total, METODO_PAGAMENTO, LOJA_ID, CLIENTE_ID) VALUES (?, ?, ?, ?, ?, ?, ?)", batch);
                 inserted += batch.size();

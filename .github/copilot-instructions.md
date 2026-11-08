@@ -1,5 +1,4 @@
 # Instruções Gerais do Projeto — Sinatra Mini
-# Instruções Gerais do Projeto — Sinatra Mini (atualizado)
 
 ## 1. Contexto do Projeto
 Sinatra Mini é um SaaS simplificado para gestão de vendas de múltiplas lojas. O foco principal continua sendo **desempenho, escalabilidade e eficiência de memória**, com prioridade na migração para ambientes de produção conforme o Roadmap (v1.1.0).
@@ -28,23 +27,23 @@ src/main/java/pro/sinatra/mini/
 
 ### 3.2 Fluxo de Responsabilidades (RIGOROSO)
 - **Controller**: Recebe requisições HTTP → valida parâmetros → delega para Service → retorna ResponseEntity
-  - Exemplo: [PedidoController.java](src/main/java/pro/sinatra/mini/controller/PedidoController.java)
+  - Exemplo: [PedidoController.java](../src/main/java/pro/sinatra/mini/controller/PedidoController.java)
   - ❌ NUNCA fazer lógica de negócio ou conversões de fuso horário
   - ✅ Usar `@DateTimeFormat(iso = DateTimeFormat.ISO.DATE)` para parâmetros de data
 
 - **Service**: Lógica de negócio → conversões de fuso horário → orquestração de múltiplos repositórios → transações
-  - Exemplo: [MaiorIntervaloSemVendasService.java](src/main/java/pro/sinatra/mini/service/MaiorIntervaloSemVendasService.java)
+  - Exemplo: [MaiorIntervaloSemVendasService.java](../src/main/java/pro/sinatra/mini/service/MaiorIntervaloSemVendasService.java)
   - ✅ `@Transactional(readOnly = true)` para queries
   - ✅ Injeção via construtor (padrão do projeto)
   
 - **Repository**: Queries otimizadas → Projections → Streaming
-  - Exemplo: [PedidoRepository.java](src/main/java/pro/sinatra/mini/repository/PedidoRepository.java)
+  - Exemplo: [PedidoRepository.java](../src/main/java/pro/sinatra/mini/repository/PedidoRepository.java)
   - ✅ Definir interface de Projection DENTRO do Repository: `interface DailySalesProjection { ... }`
   - ✅ Retornar `Stream<T>` para queries de relatório
   - ✅ Preparar queries compatíveis com PostgreSQL (ex.: evitar funções específicas do H2)
 
 - **Entity**: Modelo de dados com índices compostos
-  - Exemplo: [Pedido.java](src/main/java/pro/sinatra/mini/entity/Pedido.java#L18-L20)
+  - Exemplo: [Pedido.java](../src/main/java/pro/sinatra/mini/entity/Pedido.java#L18-L20)
   - ✅ `@Index(name = "idx_pedido_loja_data", columnList = "loja_id, data_pedido")`
 
 ## 4. Padrões de Performance Críticos
@@ -93,7 +92,7 @@ public ResponseEntity<StreamingResponseBody> exportCsv(@PathVariable Long lojaId
 ### 4.5 Algoritmos
 - ❌ Evitar O(N²) em processamento de listas
 - ✅ Preferir varredura linear O(N)
-- Exemplo: [MaiorIntervaloSemVendasService.java](src/main/java/pro/sinatra/mini/service/MaiorIntervaloSemVendasService.java#L86-L98) usa algoritmo O(N) para calcular gaps entre vendas
+- Exemplo: [MaiorIntervaloSemVendasService.java](../src/main/java/pro/sinatra/mini/service/MaiorIntervaloSemVendasService.java#L86-L98) usa algoritmo O(N) para calcular gaps entre vendas
 
 ## 5. Testes (Padrões Estabelecidos)
 
@@ -112,7 +111,7 @@ src/test/java/pro/sinatra/mini/
 ✅ Limpar dados no `@BeforeEach`: deletar `ITEM_PEDIDO` primeiro (FK constraint)  
 ✅ Usar `TestRestTemplate` para chamadas HTTP  
 ✅ Para validação em PostgreSQL, usar `TestContainers` com profile dedicado (`test-postgres`)  
-Exemplo: [PedidoCsvExportIntegrationTest.java](src/test/java/pro/sinatra/mini/integration/PedidoCsvExportIntegrationTest.java)
+Exemplo: [PedidoCsvExportIntegrationTest.java](../src/test/java/pro/sinatra/mini/integration/PedidoCsvExportIntegrationTest.java)
 
 ## 6. Comandos Essenciais
 
@@ -132,15 +131,15 @@ Exemplo: [PedidoCsvExportIntegrationTest.java](src/test/java/pro/sinatra/mini/in
 ### Flyway (migrations)
 ```bash
 # Aplicar migrations localmente
-./mvnw -Dflyway.configFiles=src/main/resources/flyway.conf flyway:migrate
+./mvnw flyway:migrate
 ```
 
 ## 7. Documentação Técnica
 
 Para decisões arquiteturais detalhadas, consultar:
-- [01-ARQUITETURA-GERAL.md](documentacao/desafio/01-ARQUITETURA-GERAL.md) - Diagrama de camadas e fluxo de requisição
-- [03-OTIMIZACAO-PERFORMANCE.md](documentacao/desafio/03-OTIMIZACAO-PERFORMANCE.md) - Estratégias de performance e anti-patterns
-- [02-MODELO-DE-DADOS.md](documentacao/desafio/02-MODELO-DE-DADOS.md) - Diagrama ER e cardinalidades
+- [README.md](../README.md) - Visão geral da arquitetura, endpoints e stack
+- [ROADMAP-ARQUITETURA.md](../documentacao/evolucao-arquitetura/ROADMAP-ARQUITETURA.md) - Evolução v1.0.0 → v3.0.0
+- [story-1.1-indices-compostos.md](../docs/story-1.1-indices-compostos.md) - Estratégias de performance e índices compostos
 
 ## 8. Critérios de Aceitação ("Done")
 

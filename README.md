@@ -1,55 +1,51 @@
-# Sinatra Mini - SaaS de Gestão de Vendas
+# Sinatra Mini — Multi-Store Sales Analytics SaaS API (`Java 17` · `Spring Boot 3.2`)
 
-Sistema SaaS simplificado para gestão de vendas de múltiplas lojas, com foco em desempenho, escalabilidade e eficiência de memória.
+[![CI — Build, Test & Containerize](https://github.com/evslopes/sinatra-mini/actions/workflows/ci.yml/badge.svg)](https://github.com/evslopes/sinatra-mini/actions/workflows/ci.yml)
+![Java 17](https://img.shields.io/badge/Java-17%20LTS-ED8B00?logo=openjdk&logoColor=white)
+![Spring Boot 3.2](https://img.shields.io/badge/Spring%20Boot-3.2.12-6DB33F?logo=springboot&logoColor=white)
+![PostgreSQL 15 + Flyway](https://img.shields.io/badge/PostgreSQL%2015-Flyway%2010-4169E1?logo=postgresql&logoColor=white)
+![Cache L1 + L2](https://img.shields.io/badge/Cache-Caffeine%20L1%20%2B%20Redis%20L2-DC382D?logo=redis&logoColor=white)
+![Kubernetes HPA](https://img.shields.io/badge/Kubernetes-HPA%20%2B%20Kustomize-326CE5?logo=kubernetes&logoColor=white)
 
-## Stack Tecnológica
+> 🇺🇸 **EN:** High-throughput **Multi-Store Sales Analytics SaaS API** engineered in **Java 17** and **Spring Boot 3.2**, designed for **constant-memory CSV streaming (`100k+` rows without Heap OOM)**, **`O(N)` linear-scan time-series analytics**, **composite JPA indexing**, **Flyway-versioned PostgreSQL (`V1–V11`)**, **multi-tier caching (`L1 Caffeine` + `L2 Redis`)**, **Testcontainers integration suites**, and **Kubernetes HPA (`3–10` replicas)**.  
+> 🇧🇷 **PT:** Plataforma **SaaS de Análise de Vendas Multi-Loja** em **Java 17** e **Spring Boot 3.2**, projetada para **exportação CSV em memória constante via streaming (`100k+` registros sem OOM)**, **algoritmos analíticos lineares `O(N)`**, **indexação composta JPA**, **migrações Flyway em PostgreSQL (`V1–V11`)**, **cache em duas camadas (`L1 Caffeine` + `L2 Redis`)**, **suíte de integração com Testcontainers** e **manifestos Kubernetes com HPA (`3–10` pods)**.
 
-- **Linguagem**: Java 17
-- **Framework**: Spring Boot 3.2.12
-- **Banco de Dados (Produção)**: PostgreSQL 15+
-- **Banco de Dados (Dev/Teste)**: H2 (in-memory)
-- **Migrations**: Flyway
-- **Cache**: Caffeine (L1) + Redis (L2 - distribuído)
-- **Build**: Maven
-- **Persistência**: JPA / Hibernate
+---
 
-## Arquitetura
+## Arquitetura & Fluxo de Engenharia de Performance
 
-O projeto segue uma arquitetura em camadas:
+```mermaid
+flowchart LR
+    Client["REST Client / Analytics Consumer"] --> Ctrl["Spring MVC Controllers (SRP & DTO Records)"]
+    Ctrl --> Svc["Analytical Services (ZoneId Conversion & O(N) Scans)"]
+    Svc --> Cache["CompositeCacheManager (L1 Caffeine <0.1ms / L2 Redis)"]
+    Svc --> Repo["Spring Data JPA Projections & Stream<T> (fetchSize=500)"]
+    Repo --> DB[("PostgreSQL 15 (Flyway V1–V11 & idx_pedido_loja_data)")]
+    Ctrl -. "StreamingResponseBody (Chunked I/O)" .-> Client
+```
 
-- **Controller**: Endpoints REST (SRP - Single Responsibility Principle)
-- **Service**: Lógica de negócio, conversões de fuso horário
-- **Repository**: Consultas otimizadas com projeções e streaming
-- **Entity**: Modelos de dados com índices compostos
+### Destaques Técnicos Principais
 
-## APIs Implementadas
+| Pilar de Engenharia | Problema Clássico em Produção | Solução Adotada neste Repositório |
+| :--- | :--- | :--- |
+| **Streaming Analítico `O(1)` Memória** | `findAll()` materializa milhares de entidades JPA na Heap causando `OutOfMemoryError` | `Stream<DailySalesProjection>` com `@Transactional(readOnly = true)`, `@QueryHints(fetchSize = "500")` e escrita direta em `StreamingResponseBody` |
+| **Indexação Composta & Projeções** | *Full Table Scans* e tráfego desnecessário de colunas/relacionamentos (`N+1`) | Índice composto `idx_pedido_loja_data (loja_id, data_pedido)` + projeções enxutas e `Java 17 Records` imutáveis |
+| **Algoritmos `O(N)` & Fuso Horário** | Loops aninhados `O(N^2)` para detectar janelas sem vendas e inconsistências de fuso | Varredura linear única `O(N)` sobre datas distintas (`MaiorIntervaloSemVendasService`) e conversão `ZoneId` isolada na camada `Service` |
+| **Cache Híbrido Multi-Nível** | Latência repetitiva em leituras quentes ou indisponibilidade transitória de cache remoto | `CompositeCacheManager` combinando **L1 `Caffeine`** (`10.000` entradas, `< 0,1 ms`) e **L2 `Redis`** distribuído (`TTL 10 min`) |
+| **Resiliência de Testes (`Testcontainers` + Fallback `H2`)** | Testes de integração que falham quando o desenvolvedor está sem Docker local ativo | `GlobalTestBootstrap` sobe automaticamente `postgres:15-alpine` via **Testcontainers** em CI/Docker e faz *fallback* transparente para **H2 + Triggers** em máquinas sem daemon |
+| **Produção Cloud-Native (`Docker` & `K8s`)** | Imagens pesadas rodando como `root` e ausência de autoescalonamento/backup | `Dockerfile` multi-stage (`eclipse-temurin:17-jre-alpine`, usuário não-root, `dumb-init`, `G1GC`, `MaxRAMPercentage=75%`) + manifestos `k8s/` com **HPA (3–10 pods)** e `CronJob` de backup |
 
-### 2.1 Exportação de Relatório de Vendas Diárias (CSV)
+---
 
-**Endpoint**: `GET /pedidos/{lojaId}/reports/daily-sales.csv`
+## Contratos REST Analíticos Implementados
 
-**Descrição**: Exporta relatório de vendas diárias em formato CSV com streaming para evitar sobrecarga de memória.
+### 1. Exportação Streaming de Vendas Diárias (CSV)
+- **Endpoint:** `GET /pedidos/{lojaId}/reports/daily-sales.csv`
+- **Comportamento:** Transmite cabeçalho `date,total` e linhas `YYYY-MM-DD,valor` incrementalmente via `StreamingResponseBody` com `fetchSize=500`.
 
-**Resposta**: Arquivo CSV com cabeçalho `date,total` e linhas formatadas `YYYY-MM-DD,valor`.
-
-**Otimizações**:
-- Uso de `Stream<DailySalesProjection>` para processar dados em chunks
-- Projeção JPA com apenas as colunas necessárias (dia, total)
-- Streaming direto para `StreamingResponseBody` sem carregar tudo na RAM
-- `@QueryHints` com `fetchSize=500` para controle de memória
-
-### 2.2 Maior Intervalo Sem Vendas
-
-**Endpoint**: `GET /pedidos/{lojaId}/reports/longest-no-sales?start={date}&end={date}`
-
-**Descrição**: Calcula o maior intervalo contínuo (em dias) sem vendas registradas para uma loja.
-
-**Parâmetros**:
-- `lojaId`: ID da loja
-- `start` (opcional): Data inicial do período
-- `end` (opcional): Data final do período
-
-**Resposta**:
+### 2. Maior Intervalo Contínuo Sem Vendas (`O(N)`)
+- **Endpoint:** `GET /pedidos/{lojaId}/reports/longest-no-sales?start={date}&end={date}`
+- **Resposta:**
 ```json
 {
   "inicio": "2026-01-10",
@@ -58,21 +54,9 @@ O projeto segue uma arquitetura em camadas:
 }
 ```
 
-**Algoritmo**: Varredura linear O(N) sobre dias distintos com vendas, calculando gaps entre datas consecutivas.
-
-### 2.3 Dia com Menor Venda
-
-**Endpoint**: `GET /pedidos/{lojaId}/reports/min-day-sales?start={date}&end={date}&zoneId={timezone}`
-
-**Descrição**: Identifica o dia com o menor total de vendas no período especificado.
-
-**Parâmetros**:
-- `lojaId`: ID da loja
-- `start` (opcional): Data inicial
-- `end` (opcional): Data final
-- `zoneId` (opcional): Fuso horário (padrão: UTC)
-
-**Resposta**:
+### 3. Dia com Menor Volume de Vendas (`Timezone-Aware`)
+- **Endpoint:** `GET /pedidos/{lojaId}/reports/min-day-sales?start={date}&end={date}&zoneId={timezone}`
+- **Resposta:**
 ```json
 {
   "dia": "2026-01-12",
@@ -81,216 +65,74 @@ O projeto segue uma arquitetura em camadas:
 }
 ```
 
-**Conversão de Timezone**: Realizada exclusivamente na camada de Service para garantir consistência.
-
-### 2.4 Média de Vendas por Dia da Semana
-
-**Endpoint**: `GET /pedidos/{lojaId}/reports/weekly-average?start={date}&end={date}&zoneId={timezone}`
-
-**Descrição**: Calcula a média de vendas diárias agrupada por dia da semana (Segunda a Domingo).
-
-**Parâmetros**:
-- `lojaId`: ID da loja
-- `start` (opcional): Data inicial
-- `end` (opcional): Data final
-- `zoneId` (opcional): Fuso horário (padrão: UTC)
-
-**Resposta**:
+### 4. Média Diária por Dia da Semana (`Segunda–Domingo`)
+- **Endpoint:** `GET /pedidos/{lojaId}/reports/weekly-average?start={date}&end={date}&zoneId={timezone}`
+- **Resposta:**
 ```json
 [
   { "diaSemana": "MONDAY", "media": 5230.75 },
-  { "diaSemana": "TUESDAY", "media": 4890.20 },
-  ...
+  { "diaSemana": "TUESDAY", "media": 4890.20 }
 ]
 ```
 
-## Otimizações de Performance
+---
 
-### Índices Compostos
+## Como Executar & Validar
 
-Todos os endpoints de relatório utilizam filtros por `loja_id` e `data_pedido`. Foram criados índices compostos na entidade `Pedido`:
-
-```java
-@Table(name = "PEDIDO", indexes = {
-    @Index(name = "idx_loja_data", columnList = "loja_id, data_pedido")
-})
-```
-
-### Projeções Spring Data
-
-Para evitar carregar entidades completas, todas as consultas de relatório utilizam **projeções** (interfaces ou DTOs) que selecionam apenas as colunas necessárias:
-
-- `DailySalesProjection`: dia, total
-- `DailySaleDaysProjection`: dia
-- `SaleProjection`: dataPedido, total
-
-### Streaming e FetchSize
-
-Para exportações CSV e processamento de grandes volumes:
-
-```java
-@QueryHints(value = @QueryHint(name = HINT_FETCH_SIZE, value = "500"))
-Stream<DailySalesProjection> streamDailySalesByLoja(@Param("lojaId") Long lojaId);
-```
-
-### Transações Read-Only
-
-Métodos de leitura marcados com `@Transactional(readOnly = true)` para otimizar conexões e permitir streaming.
-
-## Decisões Técnicas
-
-### 1. Manipulação de Datas e Fusos Horários
-
-- **Armazenamento**: Datas no banco são tratadas de forma agnóstica (sem fuso)
-- **Conversões**: Executadas somente na camada de Service
-- **API**: Endpoints que dependem de timezone recebem parâmetro `zoneId` opcional
-
-### 2. Algoritmos de Alto Desempenho
-
-- **Complexidade Linear O(N)**: Evitado O(N²) em processamento de listas
-- **Varredura única**: Cálculo de intervalos sem múltiplas iterações
-- **Streaming**: Processamento incremental sem carregar tudo na memória
-
-### 3. DTOs Imutáveis
-
-Utilização de Java Records (Java 17) para DTOs:
-
-```java
-public record PeriodoDTO(LocalDate inicio, LocalDate fim, long dias) {}
-public record MenorVendaDiaDTO(LocalDate dia, Double total, String zoneId) {}
-public record MediaSemanalDTO(DayOfWeek diaSemana, Double media) {}
-```
-
-### 4. Separação de Responsabilidades
-
-- **Controllers**: Recebem requisições e retornam respostas (sem lógica de negócio)
-- **Services**: Implementam regras de negócio, cálculos e conversões
-- **Repositories**: Consultas otimizadas e streaming
-
-## Testes
-
-A suíte de testes inclui:
-
-- **Testes de Integração**: Validam endpoints REST end-to-end
-- **Testes de Performance**: Verificam eficiência com grandes volumes (500+ pedidos)
-- **Testes de Unidade**: Validam lógica de negócio em Services
-
-### Executar Testes
-
+### Suíte Automatizada (`54` Testes Unitários, Integração & Performance)
 ```bash
-mvn test
+# Linux / macOS
+./mvnw clean test
+
+# Windows (PowerShell / CMD)
+.\mvnw.cmd clean test
 ```
+> Se o **Docker** estiver em execução, a suíte provisiona automaticamente um container `postgres:15-alpine` via **Testcontainers** e valida as 11 migrações Flyway reais (`V1–V11`). Sem Docker local, o bootstrap ativa automaticamente o *fallback* em memória com paridade de triggers.
 
-### Executar Teste Específico
-
+### Ambiente Completo com PostgreSQL 15 + Redis 7 (`Docker Compose`)
 ```bash
-mvn test -Dtest=PedidoCsvExportIntegrationTest
+cp .env.example .env
+docker-compose up -d
+./mvnw spring-boot:run -Dspring-boot.run.profiles=dev
 ```
+- **Health & Prometheus Metrics:** `http://localhost:8080/actuator/health`
 
-## Build e Execução
+---
 
-### Compilar
+## Estrutura do Repositório & Documentação Arquitetural
 
-```bash
-mvn clean package
-```
-
-### Executar
-
-```bash
-mvn spring-boot:run
-```
-
-A aplicação estará disponível em `http://localhost:8080`.
-
-## Console H2
-
-Durante a execução, o console H2 está disponível em `http://localhost:8080/h2-console`:
-
-- **JDBC URL**: `jdbc:h2:mem:testdb`
-- **User**: `sa`
-- **Password**: (vazio)
-
-## Estrutura do Projeto
-
-```
+```text
 sinatra-mini/
-├── src/main/java/pro/sinatra/mini/
-│   ├── controller/       # Endpoints REST
-│   ├── service/          # Lógica de negócio
-│   ├── repository/       # Consultas JPA
-│   ├── entity/           # Modelos de dados
-│   └── reports/          # DTOs de relatórios
-├── src/main/resources/
-│   ├── application.properties
-│   ├── application-dev.yml         # Perfil PostgreSQL dev
-│   ├── application-prod.yml        # Perfil PostgreSQL prod
-│   ├── application-test-postgres.yml # Perfil TestContainers
-│   ├── db/migration/               # Flyway migrations
-│   │   ├── V1__initial_schema.sql
-│   │   ├── V2__add_performance_indexes.sql
-│   │   └── V3__seed_test_data.sql
-│   └── data.sql          # Dados iniciais (H2 apenas)
-├── src/test/java/        # Testes
-├── docker-compose.yml    # PostgreSQL + Redis
-├── flyway.conf.example   # Template Flyway config
-└── docs/                 # Documentação técnica
+├── .github/
+│   ├── agents/               # Governança Multi-Agente (Agile, Engineer, QA, DevOps)
+│   ├── workflows/            # Pipeline CI (Java 17 + Testcontainers + Docker Build)
+│   └── copilot-instructions.md
+├── docs/                     # Especificações técnicas por Story (Índices, CSV, O(N), Timezone)
+├── documentacao/
+│   └── evolucao-arquitetura/ # Roadmap Arquitetural (6 Épicos: v1.1 a v3.0) & Plano RPO/RTO
+├── k8s/                      # Manifestos Kubernetes (Deployment, HPA 3-10, StatefulSets, Backup CronJob)
+├── scripts/                  # Automação de Build Docker, Deploy K8s e Backup/Restore PostgreSQL
+└── src/
+    ├── main/java/pro/sinatra/mini/
+    │   ├── config/           # CompositeCacheManager (Caffeine L1 + Redis L2) & Flyway
+    │   ├── controller/       # Endpoints RESTful enxutos (SRP)
+    │   ├── service/          # Regras analíticas O(N), agregações e conversões ZoneId
+    │   ├── repository/       # Projeções JPA e consultas Stream<T>
+    │   ├── entity/           # Modelo relacional e índices compostos
+    │   └── reports/          # Java 17 Records imutáveis
+    ├── main/resources/db/migration/ # 11 Migrações Flyway (V1__initial_schema .. V11__trigger)
+    └── test/java/pro/sinatra/mini/  # 54 testes (Integração, Carga/Performance, Validação & Unidade)
 ```
 
-## Documentação das Stories
+### Documentos de Engenharia & Governança
+- **Especificações de Implementação:** [Story 1.1 — Índices Compostos](docs/story-1.1-indices-compostos.md) · [Story 2.1 — Streaming CSV](docs/story-2.1-relatorio-csv.md) · [Story 2.2 — Maior Intervalo O(N)](docs/story-2.2-maior-intervalo-sem-vendas.md) · [Story 2.3 — Dia de Menor Venda](docs/story-2.3-dia-de-menor-venda.md) · [Story 2.4 — Média Semanal](docs/story-2.4-media-semanal.md)
+- **Operações, Cloud & SRE:** [Guia Docker & Kubernetes (HPA)](README-DOCKER-K8S.md) · [Roadmap Arquitetural (6 Épicos até CQRS/Sharding)](documentacao/evolucao-arquitetura/ROADMAP-ARQUITETURA.md) · [Runbook de Backup & Disaster Recovery (RPO/RTO)](documentacao/evolucao-arquitetura/BACKUP-RECOVERY.md)
+- **Qualidade & Governança CI/CD:** [Relatório de Testes QA](docs/QA-TEST-REPORT.md) · [Pipeline CI/CD](docs/CI-CD-SETUP.md) · [Estratégia GitFlow](docs/GITFLOW.md) · [Branch Protection](docs/BRANCH-PROTECTION.md) · [Changelog SemVer](CHANGELOG.md)
 
-Cada funcionalidade implementada está documentada em sua própria story:
+---
 
-### Épico 1: Otimização Estrutural (Foundation)
+## Autor & Licenciamento
 
-- **[Story 1.1 - Índices Compostos](docs/story-1.1-indices-compostos.md)**
-  - Implementação de índices compostos `(loja_id, data_pedido)`
-  - Otimização de queries para O(log N)
-  - Validação via EXPLAIN PLAN
+Projetado e desenvolvido por **Elvis Freitas Lopes Herllain** — Senior Software Engineer, Tech Lead & Solutions Architect ([jhhsolutions.dev](https://jhhsolutions.dev) · [LinkedIn](https://www.linkedin.com/in/evslopes/) · [X / @evslopes](https://x.com/evslopes)).
 
-### Épico 2: APIs Analíticas (Core Business)
-
-- **[Story 2.1 - Relatório CSV](docs/story-2.1-relatorio-csv.md)**
-  - Exportação de vendas diárias em CSV via streaming
-  - `GET /pedidos/{lojaId}/reports/daily-sales.csv`
-  - Processamento eficiente de grandes volumes sem sobrecarga de memória
-
-- **[Story 2.2 - Maior Intervalo Sem Vendas](docs/story-2.2-maior-intervalo-sem-vendas.md)**
-  - Identificação do maior período sem vendas
-  - `GET /pedidos/{lojaId}/reports/longest-no-sales`
-  - Algoritmo O(N) sobre dias com vendas
-
-- **[Story 2.3 - Dia de Menor Venda](docs/story-2.3-dia-de-menor-venda.md)**
-  - Dia com menor total de vendas no período
-  - `GET /pedidos/{lojaId}/reports/min-day-sales`
-  - Suporte a fusos horários via parâmetro `zoneId`
-
-- **[Story 2.4 - Média Semanal](docs/story-2.4-media-semanal.md)**
-  - Média de vendas por dia da semana (Segunda-Domingo)
-  - `GET /pedidos/{lojaId}/reports/weekly-average`
-  - Agregação por `DayOfWeek` com conversão de timezone
-
-## Melhorias Futuras (Sugestões)
-
-1. **Cache**: Implementar cache (Redis/Caffeine) para consultas frequentes
-2. **Particionamento**: Estratégia de sharding por `loja_id` para escalabilidade horizontal
-3. **Processamento Assíncrono**: Filas (RabbitMQ/Kafka) para exportações grandes
-4. **API Gateway**: Centralizar roteamento e autenticação em multi-tenancy
-5. **Métricas**: Prometheus + Grafana para observabilidade
-
-## Critérios de Aceitação ("Done")
-
-Uma tarefa está completa quando:
-
-- ✅ O código compila e roda sem erros
-- ✅ Não existem violações de performance (full table scans evitados)
-- ✅ Testes de integração passam
-- ✅ Código é legível, com nomes significativos e responsabilidade clara por camada
-
-## Autor
-
-Elvis Herllain, desenvolvido como parte do desafio técnico Sinatra Mini.
-
-## Licença
-
-Este projeto é de uso acadêmico/avaliativo.
+Distribuído sob a licença [MIT](LICENSE).

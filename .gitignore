@@ -1,12 +1,5 @@
-# Java / Maven / Spring standard ignores
-
 # Build output
 target/
-
-# Maven wrapper
-/.mvn/
-/.mvnw
-/.mvnw.cmd
 
 # Compiled class files
 *.class
@@ -19,52 +12,42 @@ logs/
 *.jar
 *.war
 *.ear
+!/.mvn/wrapper/maven-wrapper.jar
 
-# Eclipse
+# IDEs
 .classpath
 .project
 .settings/
-
-# IntelliJ
 *.iml
 .idea/
-
-# NetBeans
 /nbproject/private/
 /build/
 /nbbuild/
 /dist/
-
-# VS Code
 .vscode/
 
 # OS files
 .DS_Store
+Thumbs.db
 
-# Temporary files
+# Temporary files & CSV runtime exports
 tmp/
 temp/
+daily-sales.csv
 
-# Spring Boot
+# Spring Boot & JVM crash logs
 spring.log
 hs_err_pid*
 
-# Environment variables (segurança)
+# Environment variables & local credentials
 .env
 .env.local
 .env.*.local
-
-# Flyway config with credentials (usar flyway.conf.example)
 flyway.conf
 
-# Database local
+# Local databases
 *.db
 *.sqlite
-
-# H2 database files
 *.h2.db
 *.mv.db
 *.trace.db
-
-
-

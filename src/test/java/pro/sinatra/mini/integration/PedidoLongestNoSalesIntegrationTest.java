@@ -55,7 +55,7 @@ public class PedidoLongestNoSalesIntegrationTest {
             jdbcTemplate.update(conn -> {
                 var ps = conn.prepareStatement("INSERT INTO LOJA (NOME, CNPJ, DATA_CRIACAO) VALUES (?, ?, ?)", new String[]{"id"});
                 ps.setString(1, "Loja Teste");
-                ps.setString(2, String.format("00.000.000/0001-%02d", (int)(System.nanoTime() % 100)));
+                ps.setString(2, pro.sinatra.mini.test.TestIdentifiers.nextCnpj());
                 ps.setDate(3, java.sql.Date.valueOf(LocalDate.now()));
                 return ps;
             }, keyHolder);
@@ -75,7 +75,7 @@ public class PedidoLongestNoSalesIntegrationTest {
         for (LocalDate d : sales) {
             LocalDateTime dt = LocalDateTime.of(d, LocalTime.NOON);
                     jdbcTemplate.update("INSERT INTO PEDIDO (NUMERO_PEDIDO, DATA_PEDIDO, STATUS, valor_total, METODO_PAGAMENTO, LOJA_ID, CLIENTE_ID) VALUES (?, ?, ?, ?, ?, ?, ?)",
-                        "NP-" + System.nanoTime(), java.sql.Timestamp.valueOf(dt), "OK", 10.0, "CARD", lojaId, null);
+                        pro.sinatra.mini.test.TestIdentifiers.nextNumeroPedido(), java.sql.Timestamp.valueOf(dt), "OK", 10.0, "CARD", lojaId, null);
         }
 
         String url = "http://localhost:" + port + "/pedidos/" + lojaId + "/reports/longest-no-sales?start=2025-01-01&end=2025-01-15";

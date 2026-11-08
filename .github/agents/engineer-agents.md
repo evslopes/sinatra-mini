@@ -65,7 +65,7 @@ for (int i = 0; i < datas.size() - 1; i++) {
 
 ### Épico 1: Migração PostgreSQL (v1.1.0)
 
-**Issue GitHub:** [#15](https://github.com/jhhdev/sinatra-mini/issues/15)
+**Issue GitHub:** [#15](https://github.com/evslopes/sinatra-mini/issues/15)
 
 #### Story 1.1.2: Flyway Migrations
 
@@ -135,7 +135,7 @@ ON item_pedido(pedido_id);
 
 ### Épico 2: Cache Distribuído (v1.1.0)
 
-**Issue GitHub:** [#23](https://github.com/jhhdev/sinatra-mini/issues/23) / [#24](https://github.com/jhhdev/sinatra-mini/issues/24)
+**Issue GitHub:** [#23](https://github.com/evslopes/sinatra-mini/issues/23) / [#24](https://github.com/evslopes/sinatra-mini/issues/24)
 
 #### Story 1.1.5: Cache L1 (Caffeine)
 
@@ -249,7 +249,7 @@ public class PedidoService {
 
 ### Épico 3: Alta Disponibilidade (v1.2.0)
 
-**Issue GitHub:** [#26](https://github.com/jhhdev/sinatra-mini/issues/26)
+**Issue GitHub:** [#26](https://github.com/evslopes/sinatra-mini/issues/26)
 
 #### Story 1.2.2: PostgreSQL Read Replicas
 
@@ -298,7 +298,7 @@ public class PedidoService {
 
 ### Épico 4: Observabilidade (v1.2.0)
 
-**Issue GitHub:** [#30](https://github.com/jhhdev/sinatra-mini/issues/30)
+**Issue GitHub:** [#30](https://github.com/evslopes/sinatra-mini/issues/30)
 
 #### Story 1.2.3: Métricas com Prometheus
 
@@ -337,7 +337,7 @@ public class MetricsConfig {
 
 ### Épico 5: Multi-Tenancy com Sharding (v2.0.0)
 
-**Issue GitHub:** [#34](https://github.com/jhhdev/sinatra-mini/issues/34)
+**Issue GitHub:** [#34](https://github.com/evslopes/sinatra-mini/issues/34)
 
 **Estratégia de Sharding:**
 ```java
@@ -362,7 +362,7 @@ Shard 3: Lojas 3, 7, 11, 15, ... (25%)
 
 ### Épico 6: CQRS e Event Sourcing (v3.0.0)
 
-**Issue GitHub:** [#39](https://github.com/jhhdev/sinatra-mini/issues/39)
+**Issue GitHub:** [#39](https://github.com/evslopes/sinatra-mini/issues/39)
 
 **Arquitetura:**
 ```
@@ -403,9 +403,9 @@ Shard 3: Lojas 3, 7, 11, 15, ... (25%)
 
 Aguardar atribuição de Stories pelo Agente Agile:
 
-- **Sprint 1**: Story 1.1.2 (Flyway Migrations) - [Issue #17](https://github.com/jhhdev/sinatra-mini/issues/17)
-- **Sprint 2**: Story 1.1.5 (Caffeine Cache) - [Issue #20](https://github.com/jhhdev/sinatra-mini/issues/20)
-- **Sprint 2**: Story 1.1.6 (Redis Cache) - [Issue #21](https://github.com/jhhdev/sinatra-mini/issues/21)
+- **Sprint 1**: Story 1.1.2 (Flyway Migrations) - [Issue #17](https://github.com/evslopes/sinatra-mini/issues/17)
+- **Sprint 2**: Story 1.1.5 (Caffeine Cache) - [Issue #20](https://github.com/evslopes/sinatra-mini/issues/20)
+- **Sprint 2**: Story 1.1.6 (Redis Cache) - [Issue #21](https://github.com/evslopes/sinatra-mini/issues/21)
 
 **Comandos para iniciar:**
 ```bash
@@ -422,7 +422,7 @@ git checkout -b feature/2-flyway-migrations
 
 ## 8. Referências
 
-- [ROADMAP-ARQUITETURA.md](documentacao/evolucao-arquitetura/ROADMAP-ARQUITETURA.md) - Roadmap completo
-- [copilot-instructions.md](.github/copilot-instructions.md) - Instruções gerais
-- [agile-agents.md](.github/agents/agile-agents.md) - Backlog e priorização
-- [03-OTIMIZACAO-PERFORMANCE.md](documentacao/desafio/03-OTIMIZACAO-PERFORMANCE.md) - Estratégias de performance
+- [ROADMAP-ARQUITETURA.md](../../documentacao/evolucao-arquitetura/ROADMAP-ARQUITETURA.md) - Roadmap completo
+- [copilot-instructions.md](../copilot-instructions.md) - Instruções gerais
+- [agile-agents.md](./agile-agents.md) - Backlog e priorização
+- [03-OTIMIZACAO-PERFORMANCE.md](../../docs/story-1.1-indices-compostos.md) - Estratégias de performance

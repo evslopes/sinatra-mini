@@ -1,4 +1,4 @@
-name: CI - Build & Test
+name: CI — Build, Test & Containerize
 
 on:
   push:
@@ -15,40 +15,32 @@ on:
 
 jobs:
   build-and-test:
-    name: Build & Test (Java 17)
+    name: Maven Verify (Java 17 + Testcontainers Postgres 15)
     runs-on: ubuntu-latest
-    
+
     steps:
-      - name: Checkout code
+      - name: Checkout repository
         uses: actions/checkout@v4
-      
-      - name: Set up JDK 17
+
+      - name: Set up Eclipse Temurin JDK 17
         uses: actions/setup-java@v4
         with:
           java-version: '17'
           distribution: 'temurin'
           cache: 'maven'
-      
-      - name: Build and Test
-        run: |
-          # If repository layout uses sinatra-mini subdirectory (refactor), switch into it
-          if [ -f "sinatra-mini/pom.xml" ]; then
-            cd sinatra-mini
-          fi
 
-          # Prefer the Maven wrapper if available, fallback to system mvn
-          if [ -x ./mvnw ]; then
-            ./mvnw clean verify -B
-          else
-            mvn clean verify -B
-          fi
-      
-      - name: Archive test reports
+      - name: Execute Unit & Integration Suite
+        run: |
+          chmod +x ./mvnw
+          ./mvnw clean verify -B
+
+      - name: Validate Multi-Stage Production Docker Build
+        run: docker build -t sinatra-mini:ci .
+
+      - name: Archive Surefire Reports on Failure
         if: failure()
         uses: actions/upload-artifact@v4
         with:
-          name: test-reports
-          path: |
-            sinatra-mini/target/surefire-reports/
-            sinatra-mini/target/failsafe-reports/
+          name: surefire-reports
+          path: target/surefire-reports/
           retention-days: 7

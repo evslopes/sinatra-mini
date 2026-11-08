@@ -35,6 +35,9 @@ spring:
     out-of-order: false
 
 sinatra:
+  cache:
+    redis:
+      enabled: true
   manual-flyway:
     enabled: true
 

@@ -23,22 +23,22 @@ Atual          Q2 2026        Q3 2026         Q4 2026         Q1 2027
 ## 🔗 Quick Links - Issues GitHub
 
 ### Épicos
-- [#15 - Épico 1: PostgreSQL](https://github.com/jhhdev/sinatra-mini/issues/15) 🔴 CRÍTICA
-- [#23/#24 - Épico 2: Cache](https://github.com/jhhdev/sinatra-mini/issues/23) 🟡 ALTA
-- [#26 - Épico 3: Alta Disponibilidade](https://github.com/jhhdev/sinatra-mini/issues/26) 🟢 MÉDIA
-- [#30 - Épico 4: Observabilidade](https://github.com/jhhdev/sinatra-mini/issues/30) 🟡 ALTA
-- [#34 - Épico 5: Sharding](https://github.com/jhhdev/sinatra-mini/issues/34) 💡 PROPOSTO
-- [#39 - Épico 6: CQRS](https://github.com/jhhdev/sinatra-mini/issues/39) 💡 PROPOSTO
+- [#15 - Épico 1: PostgreSQL](https://github.com/evslopes/sinatra-mini/issues/15) 🔴 CRÍTICA
+- [#23/#24 - Épico 2: Cache](https://github.com/evslopes/sinatra-mini/issues/23) 🟡 ALTA
+- [#26 - Épico 3: Alta Disponibilidade](https://github.com/evslopes/sinatra-mini/issues/26) 🟢 MÉDIA
+- [#30 - Épico 4: Observabilidade](https://github.com/evslopes/sinatra-mini/issues/30) 🟡 ALTA
+- [#34 - Épico 5: Sharding](https://github.com/evslopes/sinatra-mini/issues/34) 💡 PROPOSTO
+- [#39 - Épico 6: CQRS](https://github.com/evslopes/sinatra-mini/issues/39) 💡 PROPOSTO
 
 ### Stories em Progresso (v1.1.0)
 | Story | Issue | Status | Responsável |
 |-------|-------|--------|-------------|
-| 1.1.1 - PostgreSQL Setup | [#16](https://github.com/jhhdev/sinatra-mini/issues/16) | ⏳ TODO | DevOps |
-| 1.1.2 - Flyway | [#17](https://github.com/jhhdev/sinatra-mini/issues/17) | ⏳ TODO | Engineer |
-| 1.1.3 - Testes | [#18](https://github.com/jhhdev/sinatra-mini/issues/18) | ⏳ TODO | QA |
-| 1.1.4 - Backup | [#19](https://github.com/jhhdev/sinatra-mini/issues/19) | ⏳ TODO | DevOps |
-| 1.1.5 - Caffeine | [#20](https://github.com/jhhdev/sinatra-mini/issues/20) | ⏳ TODO | Engineer |
-| 1.1.6 - Redis | [#21](https://github.com/jhhdev/sinatra-mini/issues/21) | ⏳ TODO | Engineer |
+| 1.1.1 - PostgreSQL Setup | [#16](https://github.com/evslopes/sinatra-mini/issues/16) | ⏳ TODO | DevOps |
+| 1.1.2 - Flyway | [#17](https://github.com/evslopes/sinatra-mini/issues/17) | ⏳ TODO | Engineer |
+| 1.1.3 - Testes | [#18](https://github.com/evslopes/sinatra-mini/issues/18) | ⏳ TODO | QA |
+| 1.1.4 - Backup | [#19](https://github.com/evslopes/sinatra-mini/issues/19) | ⏳ TODO | DevOps |
+| 1.1.5 - Caffeine | [#20](https://github.com/evslopes/sinatra-mini/issues/20) | ⏳ TODO | Engineer |
+| 1.1.6 - Redis | [#21](https://github.com/evslopes/sinatra-mini/issues/21) | ⏳ TODO | Engineer |
 
 **Comandos úteis:**
 ```bash
@@ -98,7 +98,7 @@ Cada épico/story será executado por agentes especializados do projeto:
 
 ## 🎯 Épico 1: Migração para PostgreSQL (v1.1.0)
 
-**Issue GitHub:** [#15](https://github.com/jhhdev/sinatra-mini/issues/15)  
+**Issue GitHub:** [#15](https://github.com/evslopes/sinatra-mini/issues/15)  
 **Objetivo:** Sair do H2 in-memory para um banco de dados de produção com persistência real.
 
 **Prioridade:** 🔴 CRÍTICA  
@@ -111,7 +111,7 @@ Cada épico/story será executado por agentes especializados do projeto:
 
 #### Story 1.1.1: Setup PostgreSQL e Configuração de Ambientes
 
-**Issue GitHub:** [#16](https://github.com/jhhdev/sinatra-mini/issues/16)  
+**Issue GitHub:** [#16](https://github.com/evslopes/sinatra-mini/issues/16)  
 **Como** DevOps  
 **Quero** configurar PostgreSQL em desenvolvimento, staging e produção  
 **Para** ter ambientes isolados e consistentes
@@ -165,7 +165,7 @@ spring:
 
 #### Story 1.1.2: Migração de Schema com Flyway
 
-**Issue GitHub:** [#17](https://github.com/jhhdev/sinatra-mini/issues/17)  
+**Issue GitHub:** [#17](https://github.com/evslopes/sinatra-mini/issues/17)  
 **Como** Engineer  
 **Quero** versionamento de schema com migrations  
 **Para** ter histórico auditável e deployments reproduzíveis
@@ -241,7 +241,7 @@ ON item_pedido(pedido_id);
 
 #### Story 1.1.3: Testes de Compatibilidade PostgreSQL
 
-**Issue GitHub:** [#18](https://github.com/jhhdev/sinatra-mini/issues/18)  
+**Issue GitHub:** [#18](https://github.com/evslopes/sinatra-mini/issues/18)  
 **Como** QA  
 **Quero** validar que todas as queries funcionam no PostgreSQL  
 **Para** garantir paridade com H2
@@ -288,7 +288,7 @@ public class PostgresIntegrationTest {
 
 #### Story 1.1.4: Backup e Recovery
 
-**Issue GitHub:** [#19](https://github.com/jhhdev/sinatra-mini/issues/19)  
+**Issue GitHub:** [#19](https://github.com/evslopes/sinatra-mini/issues/19)  
 **Como** SRE  
 **Quero** estratégia automatizada de backup  
 **Para** recuperar dados em caso de falha
@@ -333,7 +333,7 @@ find $BACKUP_DIR -type f -mtime +7 -delete
 
 ## 🎯 Épico 2: Cache Distribuído (v1.1.0)
 
-**Issue GitHub:** [#23](https://github.com/jhhdev/sinatra-mini/issues/23) / [#24](https://github.com/jhhdev/sinatra-mini/issues/24)  
+**Issue GitHub:** [#23](https://github.com/evslopes/sinatra-mini/issues/23) / [#24](https://github.com/evslopes/sinatra-mini/issues/24)  
 **Objetivo:** Implementar cache em Redis para reduzir carga no banco e melhorar latência.
 
 **Prioridade:** 🟡 ALTA  
@@ -346,7 +346,7 @@ find $BACKUP_DIR -type f -mtime +7 -delete
 
 #### Story 1.1.5: Implementação de Cache L1 (Caffeine)
 
-**Issue GitHub:** [#20](https://github.com/jhhdev/sinatra-mini/issues/20)  
+**Issue GitHub:** [#20](https://github.com/evslopes/sinatra-mini/issues/20)  
 **Como** Engineer  
 **Quero** cache local na JVM  
 **Para** reduzir latência de dados frequentes (< 1ms)
@@ -403,7 +403,7 @@ public class LojaService {
 
 #### Story 1.1.6: Implementação de Cache L2 (Redis)
 
-**Issue GitHub:** [#21](https://github.com/jhhdev/sinatra-mini/issues/21)  
+**Issue GitHub:** [#21](https://github.com/evslopes/sinatra-mini/issues/21)  
 **Como** Engineer  
 **Quero** cache distribuído para clusters  
 **Para** compartilhar cache entre múltiplas instâncias da aplicação
@@ -477,7 +477,7 @@ public class PedidoService {
 
 ## 🎯 Épico 3: Alta Disponibilidade (v1.2.0)
 
-**Issue GitHub:** [#26](https://github.com/jhhdev/sinatra-mini/issues/26)  
+**Issue GitHub:** [#26](https://github.com/evslopes/sinatra-mini/issues/26)  
 **Objetivo:** Eliminar single point of failure com load balancer e réplicas.
 
 **Prioridade:** 🟢 MÉDIA  
@@ -490,7 +490,7 @@ public class PedidoService {
 
 #### Story 1.2.1: Load Balancer e Múltiplas Instâncias
 
-**Issue GitHub:** [#27](https://github.com/jhhdev/sinatra-mini/issues/27)  
+**Issue GitHub:** [#27](https://github.com/evslopes/sinatra-mini/issues/27)  
 **Como** SRE  
 **Quero** load balancer na frente de N instâncias  
 **Para** distribuir tráfego e ter zero downtime
@@ -536,7 +536,7 @@ server {
 
 #### Story 1.2.2: PostgreSQL Read Replicas
 
-**Issue GitHub:** [#28](https://github.com/jhhdev/sinatra-mini/issues/28)  
+**Issue GitHub:** [#28](https://github.com/evslopes/sinatra-mini/issues/28)  
 **Como** DBA  
 **Quero** read replicas para distribuir queries de leitura  
 **Para** desafogar a primary e melhorar latência de relatórios
@@ -593,7 +593,7 @@ public class PedidoService {
 
 ## 🎯 Épico 4: Observabilidade e Monitoramento (v1.2.0)
 
-**Issue GitHub:** [#30](https://github.com/jhhdev/sinatra-mini/issues/30)  
+**Issue GitHub:** [#30](https://github.com/evslopes/sinatra-mini/issues/30)  
 **Objetivo:** Visibilidade completa do sistema com métricas, logs e tracing.
 
 **Prioridade:** 🟡 ALTA  
@@ -606,7 +606,7 @@ public class PedidoService {
 
 #### Story 1.2.3: Métricas com Prometheus + Grafana
 
-**Issue GitHub:** [#31](https://github.com/jhhdev/sinatra-mini/issues/31)  
+**Issue GitHub:** [#31](https://github.com/evslopes/sinatra-mini/issues/31)  
 **Como** SRE  
 **Quero** dashboards de métricas em tempo real  
 **Para** identificar gargalos e anomalias rapidamente
@@ -659,7 +659,7 @@ public class MetricsConfig {
 
 #### Story 1.2.4: Distributed Tracing (OpenTelemetry)
 
-**Issue GitHub:** [#32](https://github.com/jhhdev/sinatra-mini/issues/32)  
+**Issue GitHub:** [#32](https://github.com/evslopes/sinatra-mini/issues/32)  
 **Como** Engineer  
 **Quero** rastreamento de requisições distribuídas  
 **Para** debugar latência entre serviços
@@ -691,7 +691,7 @@ Trace ID: abc123
 
 ## 🎯 Épico 5: Multi-Tenancy com Sharding (v2.0.0)
 
-**Issue GitHub:** [#34](https://github.com/jhhdev/sinatra-mini/issues/34)  
+**Issue GitHub:** [#34](https://github.com/evslopes/sinatra-mini/issues/34)  
 **Objetivo:** Escalar para 10.000+ lojas com isolamento de dados.
 
 **Prioridade:** 🟢 MÉDIA  
@@ -704,20 +704,20 @@ Trace ID: abc123
 
 #### Story 2.0.1: Implementação da Lógica de Sharding
 
-**Issue GitHub:** [#35](https://github.com/jhhdev/sinatra-mini/issues/35)  
+**Issue GitHub:** [#35](https://github.com/evslopes/sinatra-mini/issues/35)  
 **Responsável:** 👤 [Engineer Agent](../../.github/agents/engineer-agents.md)  
 **Branch:** `feature/11-sharding-logic`
 
 #### Story 2.0.2: Configuração de Múltiplos DataSources
 
-**Issue GitHub:** [#36](https://github.com/jhhdev/sinatra-mini/issues/36)  
+**Issue GitHub:** [#36](https://github.com/evslopes/sinatra-mini/issues/36)  
 **Responsável:** 👤 [DevOps Agent](../../.github/agents/devops-agents.md)  
 **Dependências:** ⬅️ Story 2.0.1 (#35)  
 **Branch:** `feature/12-multi-datasource`
 
 #### Story 2.0.3: Routing de Queries Cross-Shard
 
-**Issue GitHub:** [#37](https://github.com/jhhdev/sinatra-mini/issues/37)  
+**Issue GitHub:** [#37](https://github.com/evslopes/sinatra-mini/issues/37)  
 **Responsável:** 👤 [Engineer Agent](../../.github/agents/engineer-agents.md)  
 **Dependências:** ⬅️ Story 2.0.2 (#36)  
 **Branch:** `feature/13-cross-shard-queries`
@@ -748,7 +748,7 @@ Shard 3: Lojas 3, 7, 11, 15, ... (25%)
 
 ## 🎯 Épico 6: CQRS e Event Sourcing (v3.0.0)
 
-**Issue GitHub:** [#39](https://github.com/jhhdev/sinatra-mini/issues/39)  
+**Issue GitHub:** [#39](https://github.com/evslopes/sinatra-mini/issues/39)  
 **Objetivo:** Separar responsabilidades de leitura/escrita para escala extrema.
 
 **Prioridade:** 🔵 BAIXA  
@@ -761,27 +761,27 @@ Shard 3: Lojas 3, 7, 11, 15, ... (25%)
 
 #### Story 3.0.1: Command Service (Write Side)
 
-**Issue GitHub:** [#40](https://github.com/jhhdev/sinatra-mini/issues/40)  
+**Issue GitHub:** [#40](https://github.com/evslopes/sinatra-mini/issues/40)  
 **Responsável:** 👤 [Engineer Agent](../../.github/agents/engineer-agents.md)  
 **Branch:** `feature/14-command-service`
 
 #### Story 3.0.2: Event Bus com Apache Kafka
 
-**Issue GitHub:** [#41](https://github.com/jhhdev/sinatra-mini/issues/41)  
+**Issue GitHub:** [#41](https://github.com/evslopes/sinatra-mini/issues/41)  
 **Responsável:** 👤 [DevOps Agent](../../.github/agents/devops-agents.md)  
 **Dependências:** ⬅️ Story 3.0.1 (#40)  
 **Branch:** `feature/15-event-bus`
 
 #### Story 3.0.3: Query Service com Read Models
 
-**Issue GitHub:** [#42](https://github.com/jhhdev/sinatra-mini/issues/42)  
+**Issue GitHub:** [#42](https://github.com/evslopes/sinatra-mini/issues/42)  
 **Responsável:** 👤 [Engineer Agent](../../.github/agents/engineer-agents.md)  
 **Dependências:** ⬅️ Story 3.0.2 (#41)  
 **Branch:** `feature/16-query-service`
 
 #### Story 3.0.4: Event Store e Auditoria
 
-**Issue GitHub:** [#43](https://github.com/jhhdev/sinatra-mini/issues/43)  
+**Issue GitHub:** [#43](https://github.com/evslopes/sinatra-mini/issues/43)  
 **Responsável:** 👤 [Engineer Agent](../../.github/agents/engineer-agents.md)  
 **Dependências:** ⬅️ Story 3.0.2 (#41)  
 **Branch:** `feature/17-event-store`
@@ -925,10 +925,10 @@ Para considerar uma Story como DONE, os seguintes critérios devem ser atendidos
 
 ## 📚 Referências e Documentação
 
-- [05-MELHORIAS-ARQUITETURA.md](../docs/05-MELHORIAS-ARQUITETURA.md) - Propostas detalhadas
-- [06-ANALISE-TECNICA-DECISOES.md](../docs/06-ANALISE-TECNICA-DECISOES.md) - Trade-offs
-- [CHANGELOG.md](CHANGELOG.md) - Histórico de versões
-- [QA-TEST-REPORT.md](QA-TEST-REPORT.md) - Baseline de qualidade
+- [05-MELHORIAS-ARQUITETURA.md](../../docs/story-1.1-indices-compostos.md) - Propostas detalhadas
+- [06-ANALISE-TECNICA-DECISOES.md](../../README.md) - Trade-offs
+- [CHANGELOG.md](../../CHANGELOG.md) - Histórico de versões
+- [QA-TEST-REPORT.md](../../docs/QA-TEST-REPORT.md) - Baseline de qualidade
 
 ---
 
@@ -937,11 +937,11 @@ Para considerar uma Story como DONE, os seguintes critérios devem ser atendidos
 ### Sprint 1 (Semana 1-2 de Fev/2026)
 
 1. **[Agile Agent](../../.github/agents/agile-agents.md)**: ✅ Issues criadas no GitHub
-   - [#15](https://github.com/jhhdev/sinatra-mini/issues/15): Épico 1 - PostgreSQL
-   - [#16](https://github.com/jhhdev/sinatra-mini/issues/16): Story 1.1.1 - Setup PostgreSQL
-   - [#17](https://github.com/jhhdev/sinatra-mini/issues/17): Story 1.1.2 - Flyway
-   - [#18](https://github.com/jhhdev/sinatra-mini/issues/18): Story 1.1.3 - Testes
-   - [#19](https://github.com/jhhdev/sinatra-mini/issues/19): Story 1.1.4 - Backup
+   - [#15](https://github.com/evslopes/sinatra-mini/issues/15): Épico 1 - PostgreSQL
+   - [#16](https://github.com/evslopes/sinatra-mini/issues/16): Story 1.1.1 - Setup PostgreSQL
+   - [#17](https://github.com/evslopes/sinatra-mini/issues/17): Story 1.1.2 - Flyway
+   - [#18](https://github.com/evslopes/sinatra-mini/issues/18): Story 1.1.3 - Testes
+   - [#19](https://github.com/evslopes/sinatra-mini/issues/19): Story 1.1.4 - Backup
 
 2. **[DevOps Agent](../../.github/agents/devops-agents.md)**: Iniciar Story 1.1.1 (#16)
    ```bash
